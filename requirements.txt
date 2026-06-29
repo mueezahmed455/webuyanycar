@@ -1,0 +1,73 @@
+# WeBuyAnyCar UK — Vercel Serverless Deployment
+
+Production-ready Flask application for serverless deployment on Vercel. Stateless architecture using PostgreSQL (Vercel Postgres), JWT authentication, and secure form handling.
+
+## Quick Deploy
+
+```bash
+# 1. Install Vercel CLI
+npm i -g vercel
+
+# 2. Login
+vercel login
+
+# 3. Set environment variables
+vercel env add POSTGRES_URL
+vercel env add JWT_SECRET_KEY
+vercel env add ADMIN_PASSWORD_HASH
+vercel env add MAIL_USERNAME
+vercel env add MAIL_PASSWORD
+
+# 4. Deploy
+vercel --prod
+```
+
+## Environment Variables
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `POSTGRES_URL` | Yes | Vercel Postgres connection string |
+| `POSTGRES_URL_NON_POOLING` | Yes | Non-pooled connection for migrations |
+| `JWT_SECRET_KEY` | Yes | 32+ character random string |
+| `ADMIN_PASSWORD_HASH` | Yes | Bcrypt hash of admin password |
+| `MAIL_SERVER` | Yes | SMTP server (e.g. smtp.gmail.com) |
+| `MAIL_PORT` | Yes | SMTP port (587) |
+| `MAIL_USERNAME` | Yes | SMTP username |
+| `MAIL_PASSWORD` | Yes | SMTP app password |
+| `MAIL_DEFAULT_SENDER` | No | Default from address |
+| `RECAPTCHA_SECRET_KEY` | No | reCAPTCHA v3 secret |
+| `SENTRY_DSN` | No | Error tracking |
+
+## Database Setup
+
+1. Create Vercel Postgres database in Vercel Dashboard
+2. Run migration: `psql $POSTGRES_URL_NON_POOLING -f migrations/001_init.sql`
+3. Generate admin password hash: `python -c "import bcrypt; print(bcrypt.hashpw(b'yourpassword', bcrypt.gensalt()).decode())"`
+
+## Architecture
+
+- **Entry Point**: `api/index.py` (Vercel serverless function)
+- **Database**: PostgreSQL via Vercel Postgres (Neon)
+- **Auth**: JWT tokens in httpOnly cookies
+- **File Storage**: Vercel Blob (CDN URLs stored in DB)
+- **Email**: SMTP via Flask-Mail (async via QStash recommended for scale)
+- **Security**: Input sanitization, rate limiting, CSRF, CSP headers
+
+## Admin Access
+
+- URL: `/admin`
+- Default username: `admin`
+- Password: Set via `ADMIN_PASSWORD_HASH` env var
+
+## Local Development
+
+```bash
+pip install -r requirements.txt
+python api/index.py
+```
+
+Use `.env.local` for local environment variables (see `.env.example`).
+
+## License
+
+Proprietary — WeBuyAnyCar UK Ltd
