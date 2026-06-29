@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}How It Works — Sell Your Car in 5 Steps | WeBuyAnyCar UK{% endblock %}
+{% block description %}Sell your car in 5 simple steps. Submit your details, get an instant valuation, accept the offer, arrange free collection, and get paid instantly.{% endblock %}
+
+{% block content %}
+<section class="section" style="padding-top: 140px;">
+    <div class="section-container">
+        <div class="section-header center">
+            <div class="section-label">The Process</div>
+            <h2>How It Works</h2>
+            <p>We've stripped away the complexity of selling a car. No haggling, no tyre-kickers, no waiting weeks for a buyer. Just five straightforward steps from quote to payment.</p>
+        </div>
+
+        <div style="max-width: 800px; margin: 0 auto;">
+            <div style="display: flex; gap: 32px; margin-bottom: 60px; align-items: flex-start;">
+                <div style="flex-shrink: 0; width: 64px; height: 64px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 900; color: var(--navy); box-shadow: var(--shadow-lg);">1</div>
+                <div>
+                    <h3 style="margin-bottom: 12px;">Submit Your Vehicle Details</h3>
+                    <p style="margin-bottom: 12px;">Head to our quote form and tell us about your car. We need the basics: make, model, year, mileage, and condition. Be honest — we buy cars in every condition imaginable, so there's no need to hide anything.</p>
+                    <p style="margin-bottom: 12px;">You can also upload photos of your vehicle. This helps us give you the most accurate valuation possible. Show us the front, back, sides, interior, and any damage or issues.</p>
+                    <p style="color: var(--slate-light); font-size: 0.9rem;"><i class="fas fa-clock" style="color: var(--gold); margin-right: 6px;"></i>Takes approximately 2 minutes</p>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 32px; margin-bottom: 60px; align-items: flex-start;">
+                <div style="flex-shrink: 0; width: 64px; height: 64px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 900; color: var(--navy); box-shadow: var(--shadow-lg);">2</div>
+                <div>
+                    <h3 style="margin-bottom: 12px;">Receive Your Instant Valuation</h3>
+                    <p style="margin-bottom: 12px;">Our valuation engine analyses your vehicle against real-time market data from CAP, Glass's Guide, and live auction results. Within 60 seconds, you'll have a firm, no-obligation quote.</p>
+                    <p style="margin-bottom: 12px;">The quote is valid for 7 days, giving you time to think it over or compare against other offers. We guarantee to beat any genuine quote by £100.</p>
+                    <p style="color: var(--slate-light); font-size: 0.9rem;"><i class="fas fa-clock" style="color: var(--gold); margin-right: 6px;"></i>Takes approximately 60 seconds</p>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 32px; margin-bottom: 60px; align-items: flex-start;">
+                <div style="flex-shrink: 0; width: 64px; height: 64px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 900; color: var(--navy); box-shadow: var(--shadow-lg);">3</div>
+                <div>
+                    <h3 style="margin-bottom: 12px;">Accept The Offer</h3>
+                    <p style="margin-bottom: 12px;">Happy with the price? Simply accept the offer through our website or by calling us. Once accepted, the price is locked in for 7 days — even if market conditions change.</p>
+                    <p style="margin-bottom: 12px;">We'll send you a confirmation email with your quote reference number and next steps.</p>
+                    <p style="color: var(--slate-light); font-size: 0.9rem;"><i class="fas fa-clock" style="color: var(--gold); margin-right: 6px;"></i>Instant confirmation</p>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 32px; margin-bottom: 60px; align-items: flex-start;">
+                <div style="flex-shrink: 0; width: 64px; height: 64px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 900; color: var(--navy); box-shadow: var(--shadow-lg);">4</div>
+                <div>
+                    <h3 style="margin-bottom: 12px;">Arrange Free Collection</h3>
+                    <p style="margin-bottom: 12px;">We collect from anywhere in the UK — your home, workplace, garage, or even a breakdown location. Our professional drivers are fully insured and trained to handle vehicles in any condition.</p>
+                    <p style="margin-bottom: 12px;">Collections are available 7 days a week, including evenings. Typical collection time is within 24-48 hours of acceptance.</p>
+                    <p style="color: var(--slate-light); font-size: 0.9rem;"><i class="fas fa-clock" style="color: var(--gold); margin-right: 6px;"></i>Usually within 24-48 hours</p>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 32px; margin-bottom: 60px; align-items: flex-start;">
+                <div style="flex-shrink: 0; width: 64px; height: 64px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 900; color: var(--navy); box-shadow: var(--shadow-lg);">5</div>
+                <div>
+                    <h3 style="margin-bottom: 12px;">Get Paid Instantly</h3>
+                    <p style="margin-bottom: 12px;">On collection day, our driver will inspect the vehicle to confirm it matches your description. Assuming everything checks out, we initiate payment immediately.</p>
+                    <p style="margin-bottom: 12px;">Bank transfers typically clear within 2 hours. We also offer cash or cheque. We handle all DVLA paperwork — just hand over the V5C and you're done.</p>
+                    <p style="color: var(--slate-light); font-size: 0.9rem;"><i class="fas fa-clock" style="color: var(--gold); margin-right: 6px;"></i>Money in your account within 2 hours</p>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 40px;">
+            <a href="{{ url_for('quote') }}" class="btn btn-primary" style="font-size: 1.1rem; padding: 18px 40px;">
+                <i class="fas fa-bolt"></i> Start Your Quote Now
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

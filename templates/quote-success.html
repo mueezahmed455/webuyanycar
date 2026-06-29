@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Quote Submitted — Your Valuation | WeBuyAnyCar UK{% endblock %}
+
+{% block content %}
+<section class="success-page">
+    <div class="success-card">
+        <div class="success-icon">
+            <i class="fas fa-check"></i>
+        </div>
+        <h1>Quote Submitted Successfully</h1>
+        <p style="color: var(--slate); margin-bottom: 24px;">Your quote reference number is:</p>
+        <div class="quote-ref">{{ quote_ref }}</div>
+
+        <div style="background: rgba(201, 162, 39, 0.08); border-radius: 16px; padding: 32px; margin: 28px 0; border: 2px solid var(--gold);">
+            <p style="margin: 0 0 8px; font-size: 0.9rem; color: var(--slate-light); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700;">Estimated Valuation</p>
+            <div class="valuation-amount">£{{ "{:,.2f}".format(valuation) }}</div>
+            <p class="valuation-note">This is an initial estimate based on the details provided. Final offer may vary after inspection.</p>
+        </div>
+
+        <p style="color: var(--slate); line-height: 1.8; margin-bottom: 32px;">
+            Thank you for submitting your vehicle details. Our team will review your submission and contact you within <strong>15 minutes</strong> during business hours (Mon-Fri 8am-8pm, Sat 9am-6pm) to discuss your valuation and arrange collection.
+        </p>
+
+        <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+            <a href="{{ url_for('index') }}" class="btn btn-primary">
+                <i class="fas fa-home"></i> Back to Home
+            </a>
+            <a href="{{ url_for('quote') }}" class="btn btn-dark">
+                <i class="fas fa-redo"></i> Submit Another Vehicle
+            </a>
+        </div>
+
+        <div style="margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border);">
+            <p style="font-size: 0.85rem; color: var(--slate-light); margin: 0;">
+                <i class="fas fa-phone" style="color: var(--gold); margin-right: 6px;"></i>
+                Questions? Call us on <a href="tel:08001234567" style="color: var(--navy); font-weight: 700;">0800 123 4567</a>
+            </p>
+        </div>
+    </div>
+</section>
+{% endblock %}

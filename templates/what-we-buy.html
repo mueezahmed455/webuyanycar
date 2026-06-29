@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}What We Buy — Any Vehicle, Any Condition | WeBuyAnyCar UK{% endblock %}
+{% block description %}We buy any vehicle in any condition. Damaged cars, non-runners, scrap, MOT failures, high mileage, vans, and commercial vehicles. Get a quote today.{% endblock %}
+
+{% block content %}
+<section class="section" style="padding-top: 140px;">
+    <div class="section-container">
+        <div class="section-header center">
+            <div class="section-label">No Exclusions</div>
+            <h2>We Buy Any Vehicle</h2>
+            <p>Whatever the make, model, age, or condition — we'll make you a fair, instant cash offer. Free collection and same-day payment anywhere in the UK.</p>
+        </div>
+
+        <div class="cards-grid">
+            <div class="card">
+                <div class="card-icon"><i class="fas fa-car-side"></i></div>
+                <h4>Used Cars</h4>
+                <p>High mileage, older models, unloved cars — we buy them all. Any make, any model, any year.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon"><i class="fas fa-car-crash"></i></div>
+                <h4>Damaged Cars</h4>
+                <p>Accident damage, write-offs, Category S, N, A, or B. Structural damage? No problem. We'll take it.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon"><i class="fas fa-tools"></i></div>
+                <h4>Non-Runners</h4>
+                <p>Blown engine, seized gearbox, electrical failure, snapped timing belt. If it won't drive, we'll still buy it.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon"><i class="fas fa-recycle"></i></div>
+                <h4>Scrap & End-of-Life</h4>
+                <p>Rust bucket? Beyond economical repair? We'll give you cash and take it away — even if it's only worth scrap value.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon"><i class="fas fa-times-circle"></i></div>
+                <h4>MOT Failures</h4>
+                <p>Failed on emissions, brakes, rust, suspension? We buy MOT failures daily. No repair needed.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon"><i class="fas fa-file-contract"></i></div>
+                <h4>Cars on Finance</h4>
+                <p>Outstanding finance? We can settle your loan directly and pay you any remaining equity.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon"><i class="fas fa-tachometer-alt"></i></div>
+                <h4>High Mileage</h4>
+                <p>200,000+ miles? Ex-taxi, fleet, or delivery vehicle? Mileage doesn't scare us. We'll still make a fair offer.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon"><i class="fas fa-truck-pickup"></i></div>
+                <h4>Vans & Commercials</h4>
+                <p>Transit, Sprinter, Vivaro, Transporter — we buy vans, pickups, minibuses, and commercial vehicles of all sizes.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon"><i class="fas fa-bolt"></i></div>
+                <h4>Electric & Hybrid</h4>
+                <p>EV battery degraded? Hybrid not holding charge? We buy electric, hybrid, and plug-in vehicles too.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon"><i class="fas fa-snowplow"></i></div>
+                <h4>Imports & LHD</h4>
+                <p>Japanese import, European import, left-hand drive? We can buy them, subject to documentation.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon"><i class="fas fa-water"></i></div>
+                <h4>Flood Damaged</h4>
+                <p>Flood damaged, fire damaged, vandalised — we still pay cash. Just let us know the extent of the damage.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon"><i class="fas fa-question-circle"></i></div>
+                <h4>Not Sure?</h4>
+                <p>Not sure if we'll buy your vehicle? Just submit the form and find out. There's zero obligation.</p>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 60px;">
+            <a href="{{ url_for('quote') }}" class="btn btn-primary" style="font-size: 1.1rem; padding: 18px 40px;">
+                <i class="fas fa-bolt"></i> Get Your Instant Quote
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

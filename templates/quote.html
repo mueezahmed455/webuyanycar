@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+{% block title %}Get an Instant Car Valuation — WeBuyAnyCar UK{% endblock %}
+{% block description %}Get an instant cash valuation for your car. Sell any vehicle in any condition. Free collection, instant payment. Fill in the form for a no-obligation quote.{% endblock %}
+
+{% block content %}
+<section class="quote-section">
+    <div class="section-container">
+        <div class="section-header center">
+            <div class="section-label">Get Your Quote</div>
+            <h2>Instant Car Valuation</h2>
+            <p>Fill in your vehicle details below and receive a no-obligation cash offer in under 60 seconds.</p>
+        </div>
+
+        <div class="quote-form-box">
+            <form action="{{ url_for('quote') }}" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+                <div class="form-section-title"><i class="fas fa-car"></i> Vehicle Details</div>
+                <div class="form-grid-2">
+                    <div class="form-group">
+                        <label>Make <span class="required">*</span></label>
+                        <select name="make" required>
+                            <option value="">Select Make</option>
+                            <option>Audi</option>
+                            <option>BMW</option>
+                            <option>Mercedes-Benz</option>
+                            <option>Ford</option>
+                            <option>Vauxhall</option>
+                            <option>Volkswagen</option>
+                            <option>Toyota</option>
+                            <option>Honda</option>
+                            <option>Nissan</option>
+                            <option>Hyundai</option>
+                            <option>Kia</option>
+                            <option>Peugeot</option>
+                            <option>Renault</option>
+                            <option>Citroen</option>
+                            <option>Fiat</option>
+                            <option>Seat</option>
+                            <option>Skoda</option>
+                            <option>Mitsubishi</option>
+                            <option>Mazda</option>
+                            <option>Volvo</option>
+                            <option>Mini</option>
+                            <option>Land Rover</option>
+                            <option>Jaguar</option>
+                            <option>Lexus</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Model <span class="required">*</span></label>
+                        <input type="text" name="model" placeholder="e.g. Focus 1.5 EcoBoost ST-Line" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Year <span class="required">*</span></label>
+                        <select name="year" required>
+                            <option value="">Select Year</option>
+                            {% for y in range(2026, 1989, -1) %}
+                            <option value="{{ y }}">{{ y }}</option>
+                            {% endfor %}
+                            <option value="1989">1989 or older</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Mileage <span class="required">*</span></label>
+                        <input type="text" name="mileage" placeholder="e.g. 45,000" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Registration Number</label>
+                        <input type="text" name="reg_number" placeholder="e.g. AB12 CDE">
+                    </div>
+                    <div class="form-group">
+                        <label>Fuel Type</label>
+                        <select name="fuel_type">
+                            <option value="Petrol">Petrol</option>
+                            <option value="Diesel">Diesel</option>
+                            <option value="Hybrid">Hybrid</option>
+                            <option value="Electric">Electric</option>
+                            <option value="Plug-in Hybrid">Plug-in Hybrid</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Condition <span class="required">*</span></label>
+                    <select name="condition" required>
+                        <option value="">Select Condition</option>
+                        <option>Excellent - Like new, full service history</option>
+                        <option>Good - Minor wear, runs perfectly</option>
+                        <option>Fair - Some cosmetic/mechanical issues</option>
+                        <option>Poor - Needs significant work</option>
+                        <option>Damaged - Accident damage, write-off</option>
+                        <option>Non-runner - Won't start or drive</option>
+                        <option>Scrap - End of life, salvage only</option>
+                        <option>MOT Failed - Failed recent test</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>MOT Status</label>
+                    <select name="mot_status">
+                        <option value="Valid MOT">Valid MOT</option>
+                        <option value="No MOT">No MOT</option>
+                        <option value="MOT Due Soon">MOT Due Soon</option>
+                        <option value="Failed MOT">Failed MOT</option>
+                        <option value="Exempt">Exempt</option>
+                    </select>
+                </div>
+
+                <div class="form-divider"></div>
+
+                <div class="form-section-title"><i class="fas fa-user"></i> Your Details</div>
+                <div class="form-grid-2">
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label>Full Name <span class="required">*</span></label>
+                        <input type="text" name="name" placeholder="Your full name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number <span class="required">*</span></label>
+                        <input type="tel" name="phone" placeholder="07123 456789" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address <span class="required">*</span></label>
+                        <input type="email" name="email" placeholder="your@email.com" required>
+                    </div>
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label>Address</label>
+                        <input type="text" name="address" placeholder="Street address, town/city">
+                    </div>
+                    <div class="form-group">
+                        <label>Postcode</label>
+                        <input type="text" name="postcode" placeholder="e.g. B12 8LG">
+                    </div>
+                </div>
+
+                <div class="form-divider"></div>
+
+                <div class="form-section-title"><i class="fas fa-camera"></i> Upload Photos</div>
+                <div class="form-group">
+                    <div class="file-upload-zone" onclick="document.getElementById('quoteFileInput').click()">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p><strong>Click to upload</strong> photos of your vehicle</p>
+                        <p><small>Front, back, sides, interior, damage areas. JPG, PNG, WebP accepted (max 5MB per file, up to 10 photos).</small></p>
+                        <input type="file" id="quoteFileInput" name="photos" multiple accept=".jpg,.jpeg,.png,.webp" style="display:none;">
+                    </div>
+                </div>
+
+                <div class="form-divider"></div>
+
+                <div class="form-section-title"><i class="fas fa-plus-circle"></i> Additional Information</div>
+                <div class="form-group">
+                    <textarea name="additional_info" placeholder="Any other details we should know about your vehicle? (e.g. outstanding finance, service history, known issues)" style="min-height: 100px;"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-full" style="margin-top: 16px; padding: 18px 32px; font-size: 1.1rem;">
+                    <i class="fas fa-calculator"></i> Get My Instant Valuation
+                </button>
+                <p class="form-note"><i class="fas fa-shield-alt"></i> Your information is secure and will never be shared with third parties.</p>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
