@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block title %}Quote {{ quote.quote_ref }} — Admin | WeBuyAnyCar UK{% endblock %}
+{% block body_class %}admin-body{% endblock %}
+
+{% block content %}
+<div class="admin-dashboard">
+    <aside class="admin-sidebar">
+        <a href="{{ url_for('admin_dashboard') }}" class="logo" style="justify-content: center;">
+            <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="" width="32" height="32">
+            <span style="font-size: 1.1rem;">Admin</span>
+        </a>
+        <ul class="admin-nav">
+            <li><a href="{{ url_for('admin_dashboard') }}"><i class="fas fa-chart-pie"></i> Dashboard</a></li>
+            <li><a href="{{ url_for('admin_quotes') }}" class="active"><i class="fas fa-file-invoice"></i> Quotes</a></li>
+            <li><a href="{{ url_for('admin_contacts') }}"><i class="fas fa-envelope"></i> Contacts</a></li>
+            <li><a href="{{ url_for('admin_logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+    </aside>
+
+    <main class="admin-main">
+        <div class="admin-header">
+            <h1>Quote {{ quote.quote_ref }}</h1>
+            <a href="{{ url_for('admin_quotes') }}" class="btn btn-dark" style="padding: 10px 20px; font-size: 0.9rem;">
+                <i class="fas fa-arrow-left"></i> Back to Quotes
+            </a>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px;">
+            <div class="card">
+                <h4 style="margin-bottom: 16px;">Customer Details</h4>
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tr><td style="padding: 6px 0; color: var(--slate-light); font-size: 0.85rem;">Name</td><td style="padding: 6px 0; font-weight: 700;">{{ quote.name }}</td></tr>
+                    <tr><td style="padding: 6px 0; color: var(--slate-light); font-size: 0.85rem;">Phone</td><td style="padding: 6px 0;">{{ quote.phone }}</td></tr>
+                    <tr><td style="padding: 6px 0; color: var(--slate-light); font-size: 0.85rem;">Email</td><td style="padding: 6px 0;">{{ quote.email }}</td></tr>
+                    <tr><td style="padding: 6px 0; color: var(--slate-light); font-size: 0.85rem;">Address</td><td style="padding: 6px 0;">{{ quote.address or 'N/A' }}</td></tr>
+                    <tr><td style="padding: 6px 0; color: var(--slate-light); font-size: 0.85rem;">Postcode</td><td style="padding: 6px 0;">{{ quote.postcode or 'N/A' }}</td></tr>
+                </table>
+            </div>
+
+            <div class="card">
+                <h4 style="margin-bottom: 16px;">Vehicle Details</h4>
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tr><td style="padding: 6px 0; color: var(--slate-light); font-size: 0.85rem;">Make</td><td style="padding: 6px 0; font-weight: 700;">{{ quote.make }}</td></tr>
+                    <tr><td style="padding: 6px 0; color: var(--slate-light); font-size: 0.85rem;">Model</td><td style="padding: 6px 0;">{{ quote.model }}</td></tr>
+                    <tr><td style="padding: 6px 0; color: var(--slate-light); font-size: 0.85rem;">Year</td><td style="padding: 6px 0;">{{ quote.year }}</td></tr>
+                    <tr><td style="padding: 6px 0; color: var(--slate-light); font-size: 0.85rem;">Mileage</td><td style="padding: 6px 0;">{{ quote.mileage }}</td></tr>
+                    <tr><td style="padding: 6px 0; color: var(--slate-light); font-size: 0.85rem;">Reg</td><td style="padding: 6px 0;">{{ quote.reg_number or 'N/A' }}</td></tr>
+                    <tr><td style="padding: 6px 0; color: var(--slate-light); font-size: 0.85rem;">Fuel</td><td style="padding: 6px 0;">{{ quote.fuel_type }}</td></tr>
+                    <tr><td style="padding: 6px 0; color: var(--slate-light); font-size: 0.85rem;">Condition</td><td style="padding: 6px 0;">{{ quote.condition }}</td></tr>
+                    <tr><td style="padding: 6px 0; color: var(--slate-light); font-size: 0.85rem;">MOT</td><td style="padding: 6px 0;">{{ quote.mot_status }}</td></tr>
+                </table>
+            </div>
+        </div>
+
+        {% if photos %}
+        <div class="card" style="margin-bottom: 24px;">
+            <h4 style="margin-bottom: 16px;">Vehicle Photos</h4>
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px;">
+                {% for photo_url in photos %}
+                <a href="{{ photo_url }}" target="_blank" rel="noopener">
+                    <img src="{{ photo_url }}" alt="Vehicle photo" style="width: 100%; height: 160px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border);">
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if quote.additional_info %}
+        <div class="card" style="margin-bottom: 24px;">
+            <h4 style="margin-bottom: 16px;">Additional Information</h4>
+            <p>{{ quote.additional_info }}</p>
+        </div>
+        {% endif %}
+
+        <div class="card">
+            <h4 style="margin-bottom: 16px;">Update Status</h4>
+            <form action="{{ url_for('admin_quote_update', quote_id=quote.id) }}" method="POST" style="display: flex; gap: 16px; align-items: flex-end;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                    <label>Status</label>
+                    <select name="status">
+                        <option value="new" {% if quote.status == 'new' %}selected{% endif %}>New</option>
+                        <option value="contacted" {% if quote.status == 'contacted' %}selected{% endif %}>Contacted</option>
+                        <option value="accepted" {% if quote.status == 'accepted' %}selected{% endif %}>Accepted</option>
+                        <option value="collected" {% if quote.status == 'collected' %}selected{% endif %}>Collected</option>
+                        <option value="declined" {% if quote.status == 'declined' %}selected{% endif %}>Declined</option>
+                    </select>
+                </div>
+                <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                    <label>Valuation (£)</label>
+                    <input type="number" name="valuation_amount" step="0.01" value="{{ quote.valuation_amount }}">
+                </div>
+                <button type="submit" class="btn btn-primary" style="height: 48px;">
+                    <i class="fas fa-save"></i> Update
+                </button>
+            </form>
+        </div>
+
+        <div style="margin-top: 16px; color: var(--slate-light); font-size: 0.85rem;">
+            <p>Submitted: {{ quote.created_at.strftime('%d/%m/%Y %H:%M') if quote.created_at else 'N/A' }}</p>
+            <p>IP: {{ quote.ip_address or 'N/A' }}</p>
+        </div>
+    </main>
+</div>
+{% endblock %}

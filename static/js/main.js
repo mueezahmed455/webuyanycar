@@ -1,5 +1,5 @@
 // WeBuyAnyCar UK - Main JavaScript
-// Production-ready, vanilla JS, no dependencies
+// Vanilla JS, no dependencies
 
 document.addEventListener('DOMContentLoaded', function() {
     // Mobile menu toggle
@@ -15,18 +15,33 @@ document.addEventListener('DOMContentLoaded', function() {
                 icon.classList.toggle('fa-times');
             }
         });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!mobileToggle.contains(e.target) && !navLinks.contains(e.target)) {
+                navLinks.classList.remove('active');
+                const icon = mobileToggle.querySelector('i');
+                if (icon && icon.classList.contains('fa-times')) {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            }
+        });
     }
 
     // Navbar scroll effect
     const navbar = document.getElementById('navbar');
     if (navbar) {
+        let lastScroll = 0;
         window.addEventListener('scroll', function() {
-            if (window.scrollY > 50) {
+            const currentScroll = window.scrollY;
+            if (currentScroll > 50) {
                 navbar.classList.add('scrolled');
             } else {
                 navbar.classList.remove('scrolled');
             }
-        });
+            lastScroll = currentScroll;
+        }, { passive: true });
     }
 
     // Smooth scroll for anchor links
@@ -39,6 +54,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Close mobile menu if open
                 if (navLinks && navLinks.classList.contains('active')) {
                     navLinks.classList.remove('active');
+                    const icon = mobileToggle.querySelector('i');
+                    if (icon) {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
                 }
             }
         });
@@ -49,18 +69,48 @@ document.addEventListener('DOMContentLoaded', function() {
         input.addEventListener('change', function() {
             const parent = this.closest('.file-upload-zone');
             if (parent && this.files.length > 0) {
-                parent.innerHTML = `
-                    <i class="fas fa-check-circle" style="color: var(--success); font-size: 2rem;"></i>
-                    <p style="color: var(--success); font-weight: 700;">${this.files.length} photo(s) selected</p>
-                    <p><small>Click to change selection</small></p>
-                `;
+                // Validate file types and sizes
+                const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+                const maxSize = 5 * 1024 * 1024; // 5MB
+                let validFiles = [];
+                let errors = [];
+
+                for (let file of this.files) {
+                    if (!allowedTypes.includes(file.type)) {
+                        errors.push(`${file.name}: Invalid file type. Only JPG, PNG, WebP allowed.`);
+                    } else if (file.size > maxSize) {
+                        errors.push(`${file.name}: File too large (max 5MB).`);
+                    } else {
+                        validFiles.push(file);
+                    }
+                }
+
+                if (errors.length > 0) {
+                    parent.innerHTML = `
+                        <i class="fas fa-exclamation-circle" style="color: var(--error); font-size: 2rem;"></i>
+                        <p style="color: var(--error); font-weight: 700;">${errors.length} file(s) rejected</p>
+                        <p><small>${errors[0]}${errors.length > 1 ? ' (+' + (errors.length - 1) + ' more)' : ''}</small></p>
+                    `;
+                } else {
+                    parent.innerHTML = `
+                        <i class="fas fa-check-circle" style="color: var(--success); font-size: 2rem;"></i>
+                        <p style="color: var(--success); font-weight: 700;">${this.files.length} photo(s) selected</p>
+                        <p><small>Click to change selection</small></p>
+                    `;
+                }
                 parent.appendChild(this);
                 this.style.display = 'none';
+            } else if (parent) {
+                parent.innerHTML = `
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p><strong>Click to upload</strong> or drag photos here</p>
+                    <p><small>JPG, PNG, WebP only. Max 5MB per file.</small></p>
+                `;
             }
         });
     });
 
-    // Form validation enhancement
+    // Form submission handling
     document.querySelectorAll('form').forEach(form => {
         form.addEventListener('submit', function(e) {
             const btn = this.querySelector('button[type="submit"]');
@@ -106,7 +156,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 5000);
     });
 
-    // Lazy load images (if any)
+    // Lazy load images
     if ('IntersectionObserver' in window) {
         const imgObserver = new IntersectionObserver((entries, observer) => {
             entries.forEach(entry => {
@@ -119,19 +169,19 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
             });
-        });
+        }, { rootMargin: '200px' });
 
         document.querySelectorAll('img[data-src]').forEach(img => {
             imgObserver.observe(img);
         });
     }
-});
 
-// Service Worker registration (for PWA)
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/static/js/sw.js')
-            .then(reg => console.log('SW registered:', reg.scope))
-            .catch(err => console.log('SW registration failed:', err));
-    });
-}
+    // Admin sidebar mobile toggle
+    const adminToggle = document.getElementById('adminToggle');
+    const adminSidebar = document.querySelector('.admin-sidebar');
+    if (adminToggle && adminSidebar) {
+        adminToggle.addEventListener('click', function() {
+            adminSidebar.classList.toggle('open');
+        });
+    }
+});

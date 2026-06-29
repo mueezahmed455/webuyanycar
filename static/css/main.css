@@ -1139,12 +1139,6 @@ a {
     color: var(--navy);
 }
 
-.legal-content h3 {
-    font-size: 1.2rem;
-    margin-top: 28px;
-    margin-bottom: 12px;
-}
-
 .legal-content p,
 .legal-content li {
     color: var(--slate);
@@ -1373,30 +1367,11 @@ a {
     letter-spacing: 0.05em;
 }
 
-.status-new {
-    background: rgba(201, 162, 39, 0.15);
-    color: var(--gold-dark);
-}
-
-.status-contacted {
-    background: rgba(26, 45, 74, 0.1);
-    color: var(--navy-light);
-}
-
-.status-accepted {
-    background: rgba(45, 106, 79, 0.15);
-    color: var(--success);
-}
-
-.status-declined {
-    background: rgba(193, 18, 31, 0.1);
-    color: var(--error);
-}
-
-.status-collected {
-    background: rgba(74, 85, 104, 0.1);
-    color: var(--slate);
-}
+.status-new { background: rgba(201, 162, 39, 0.15); color: var(--gold-dark); }
+.status-contacted { background: rgba(26, 45, 74, 0.1); color: var(--navy-light); }
+.status-accepted { background: rgba(45, 106, 79, 0.15); color: var(--success); }
+.status-declined { background: rgba(193, 18, 31, 0.1); color: var(--error); }
+.status-collected { background: rgba(74, 85, 104, 0.1); color: var(--slate); }
 
 /* ============================================
    FOOTER
@@ -1466,7 +1441,8 @@ a {
     margin-bottom: 12px;
 }
 
-.footer-column ul li a {
+.footer-column ul li a,
+.footer-column ul li span {
     color: rgba(250, 249, 247, 0.6);
     font-size: 0.95rem;
     transition: color 0.2s ease;
@@ -1479,7 +1455,8 @@ a {
     color: var(--gold);
 }
 
-.footer-column ul li a i {
+.footer-column ul li a i,
+.footer-column ul li span i {
     font-size: 0.85rem;
     color: var(--gold);
     width: 16px;

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Contact Messages — Admin | WeBuyAnyCar UK{% endblock %}
+{% block body_class %}admin-body{% endblock %}
+
+{% block content %}
+<div class="admin-dashboard">
+    <aside class="admin-sidebar">
+        <a href="{{ url_for('admin_dashboard') }}" class="logo" style="justify-content: center;">
+            <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="" width="32" height="32">
+            <span style="font-size: 1.1rem;">Admin</span>
+        </a>
+        <ul class="admin-nav">
+            <li><a href="{{ url_for('admin_dashboard') }}"><i class="fas fa-chart-pie"></i> Dashboard</a></li>
+            <li><a href="{{ url_for('admin_quotes') }}"><i class="fas fa-file-invoice"></i> Quotes</a></li>
+            <li><a href="{{ url_for('admin_contacts') }}" class="active"><i class="fas fa-envelope"></i> Contacts</a></li>
+            <li><a href="{{ url_for('admin_logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+    </aside>
+
+    <main class="admin-main">
+        <div class="admin-header">
+            <h1>Contact Messages</h1>
+        </div>
+
+        <div class="data-table-wrapper">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Subject</th>
+                        <th>Message</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for contact in contacts %}
+                    <tr>
+                        <td><strong>{{ contact.name }}</strong></td>
+                        <td>{{ contact.email }}</td>
+                        <td>{{ contact.phone or 'N/A' }}</td>
+                        <td>{{ contact.subject }}</td>
+                        <td style="max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ contact.message[:100] }}{% if contact.message|length > 100 %}...{% endif %}</td>
+                        <td>{{ contact.created_at.strftime('%d/%m/%Y %H:%M') if contact.created_at else 'N/A' }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" style="text-align: center; color: var(--slate-light); padding: 40px;">No messages yet</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+{% endblock %}

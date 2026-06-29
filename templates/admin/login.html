@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Admin Login — WeBuyAnyCar UK{% endblock %}
+{% block body_class %}admin-body{% endblock %}
+
+{% block content %}
+<div class="admin-login-wrapper">
+    <div class="admin-login-card">
+        <a href="{{ url_for('index') }}" class="logo">
+            <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="WeBuyAnyCar UK" width="48" height="48">
+            <span>WeBuyAnyCar</span>
+        </a>
+        <h2>Admin Login</h2>
+
+        <form action="{{ url_for('admin_login') }}" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" name="username" placeholder="Username" required>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" name="password" placeholder="Password" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-full">
+                <i class="fas fa-lock"></i> Sign In
+            </button>
+        </form>
+
+        <p style="text-align: center; margin-top: 24px; font-size: 0.85rem;">
+            <a href="{{ url_for('index') }}" style="color: var(--slate-light);">&larr; Back to Website</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

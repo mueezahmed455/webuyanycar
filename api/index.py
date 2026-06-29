@@ -380,13 +380,14 @@ def setup_csrf():
         return
     # For POST/PUT/DELETE, validate CSRF
     if request.method == 'POST':
+        # Skip CSRF check for API endpoints (protected by JWT or other means)
+        if request.path.startswith('/api/'):
+            return
         csrf_cookie = request.cookies.get('csrf_token')
         csrf_header = request.headers.get('X-CSRF-Token')
         if not csrf_cookie or not csrf_header or csrf_cookie != csrf_header:
-            # Skip CSRF check for API endpoints with JWT protection
-            if request.path.startswith('/api/'):
-                return
-            return jsonify({'error': 'CSRF validation failed'}), 403
+            flash('Session expired. Please try again.', 'error')
+            return redirect(request.referrer or url_for('index'))
 
 
 @app.after_request
@@ -464,10 +465,10 @@ def send_email_sync(subject, body, to_email):
         return False
 
 
-def send_email_async(subject, body, to_email):
+def send_email_async(subject, body, to_email, host_url=None):
     """Send email via QStash queue, falling back to synchronous SMTP."""
     qstash_token = os.environ.get('QSTASH_TOKEN')
-    base_url = request.host_url.rstrip('/') if request else os.environ.get('APP_URL', '')
+    base_url = (host_url or '').rstrip('/')
 
     if qstash_token and base_url:
         try:
@@ -683,7 +684,7 @@ def quote():
         finally:
             release_db(conn)
 
-        # Send email notification (async via QStash or sync fallback)
+        # Send email notification (sync - QStash available if configured)
         email_subject = f'New Quote Request - {quote_ref}'
         email_body = (
             f"New quote request received\n"
@@ -696,14 +697,12 @@ def quote():
             f"IP: {ip_address}\n"
             f"Submitted: {datetime.utcnow().isoformat()}"
         )
-        # Fire and forget email
-        import threading
-        t = threading.Thread(
-            target=send_email_async,
-            args=(email_subject, email_body, os.environ.get('MAIL_DEFAULT_SENDER', 'quotes@webuyanycar.co.uk'))
+        send_email_async(
+            email_subject,
+            email_body,
+            os.environ.get('MAIL_DEFAULT_SENDER', 'quotes@webuyanycar.co.uk'),
+            host_url=request.host_url
         )
-        t.daemon = True
-        t.start()
 
         return render_template('quote-success.html', quote_ref=quote_ref, valuation=valuation)
 
@@ -749,13 +748,12 @@ def contact():
         # Notify via email
         email_subject = f'Contact Form: {subject}'
         email_body = f"From: {name} <{email}>\nPhone: {phone}\n\n{message}"
-        import threading
-        t = threading.Thread(
-            target=send_email_async,
-            args=(email_subject, email_body, os.environ.get('MAIL_DEFAULT_SENDER', 'quotes@webuyanycar.co.uk'))
+        send_email_async(
+            email_subject,
+            email_body,
+            os.environ.get('MAIL_DEFAULT_SENDER', 'quotes@webuyanycar.co.uk'),
+            host_url=request.host_url
         )
-        t.daemon = True
-        t.start()
 
         flash('Thank you for your message. We will respond within 24 hours.', 'success')
         return redirect(url_for('contact'))
@@ -1034,9 +1032,6 @@ def ensure_db():
         init_db()
         app._db_initialized = True
 
-
-# Vercel handler
-app = app
 
 if __name__ == '__main__':
     app.run(debug=True)
