@@ -128,6 +128,22 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // ─── COMBINED ESCAPE KEY HANDLER ───────────────
+    document.addEventListener('keydown', function(e) {
+        if (e.key !== 'Escape') return;
+
+        // Priority 1: Close mobile menu if it's open
+        if (navLinks && navLinks.classList.contains('active')) {
+            closeMenu();
+            return;
+        }
+
+        // Priority 2: Scroll to top when body is focused
+        if (document.activeElement === document.body) {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    });
+
     // ─── SMOOTH SCROLL FOR ANCHOR LINKS ─────────────
     document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
         anchor.addEventListener('click', function(e) {
@@ -411,18 +427,3 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// ─── COMBINED ESCAPE KEY HANDLER ──────────────────
-document.addEventListener('keydown', function(e) {
-    if (e.key !== 'Escape') return;
-
-    // Priority 1: Close mobile menu if it's open
-    if (navLinks && navLinks.classList.contains('active')) {
-        closeMenu();
-        return;
-    }
-
-    // Priority 2: Scroll to top when body is focused
-    if (document.activeElement === document.body) {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-});
