@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <defs>
+    <linearGradient id="fg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#c9a227"/>
+      <stop offset="100%" style="stop-color:#e0c04d"/>
+    </linearGradient>
+  </defs>
+  <!-- Background circle -->
+  <circle cx="24" cy="24" r="22" fill="#0a1628"/>
+  <!-- Outer gold ring -->
+  <circle cx="24" cy="24" r="20" fill="none" stroke="#e0c04d" stroke-width="2"/>
+  <!-- Inner accent ring -->
+  <circle cx="24" cy="24" r="13" fill="none" stroke="url(#fg)" stroke-width="2" stroke-dasharray="5 3"/>
+  <!-- Speed arrow / gauge needle -->
+  <polygon points="24,8 31,24 24,19 17,24" fill="url(#fg)"/>
+  <!-- Road line -->
+  <line x1="10" y1="31" x2="38" y2="31" stroke="#e0c04d" stroke-width="2" stroke-linecap="round"/>
+  <!-- Wheels -->
+  <circle cx="16" cy="37" r="3.5" fill="#0a1628" stroke="url(#fg)" stroke-width="1.2"/>
+  <circle cx="32" cy="37" r="3.5" fill="#0a1628" stroke="url(#fg)" stroke-width="1.2"/>
+  <circle cx="16" cy="37" r="1.2" fill="#e0c04d"/>
+  <circle cx="32" cy="37" r="1.2" fill="#e0c04d"/>
+</svg>
