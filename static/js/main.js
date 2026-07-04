@@ -1,187 +1,428 @@
 // WeBuyAnyVehicle UK - Main JavaScript
-// Vanilla JS, no dependencies
+// Vanilla JS, no dependencies — premium UX
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Mobile menu toggle
+    'use strict';
+
+    // ─── DOM REFS ───────────────────────────────────
     const mobileToggle = document.getElementById('mobileToggle');
     const navLinks = document.getElementById('navLinks');
+    const navbar = document.getElementById('navbar');
+    const scrollProgress = document.getElementById('scrollProgress');
+    const backToTop = document.getElementById('backToTop');
 
-    if (mobileToggle && navLinks) {
-        mobileToggle.addEventListener('click', function() {
-            navLinks.classList.toggle('active');
-            const icon = this.querySelector('i');
-            if (icon) {
-                icon.classList.toggle('fa-bars');
-                icon.classList.toggle('fa-times');
-            }
-        });
+    // ─── SCROLL PROGRESS BAR ────────────────────────
+    if (scrollProgress) {
+        window.addEventListener('scroll', function() {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+            scrollProgress.style.width = Math.min(100, Math.max(0, progress)) + '%';
+        }, { passive: true });
+    }
 
-        // Close menu when clicking outside
-        document.addEventListener('click', function(e) {
-            if (!mobileToggle.contains(e.target) && !navLinks.contains(e.target)) {
-                navLinks.classList.remove('active');
-                const icon = mobileToggle.querySelector('i');
-                if (icon && icon.classList.contains('fa-times')) {
-                    icon.classList.remove('fa-times');
-                    icon.classList.add('fa-bars');
-                }
+    // ─── BACK TO TOP ────────────────────────────────
+    if (backToTop) {
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 500) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
             }
+        }, { passive: true });
+
+        backToTop.addEventListener('click', function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     }
 
-    // Navbar scroll effect
-    const navbar = document.getElementById('navbar');
+    // ─── NAVBAR SCROLL DIRECTION HIDE/SHOW ──────────
     if (navbar) {
         let lastScroll = 0;
+        let scrollTimeout;
+
         window.addEventListener('scroll', function() {
             const currentScroll = window.scrollY;
+
+            // Add scrolled class for shadow
             if (currentScroll > 50) {
                 navbar.classList.add('scrolled');
             } else {
                 navbar.classList.remove('scrolled');
             }
+
+            // Hide on scroll down, show on scroll up (only on mobile)
+            if (window.innerWidth <= 768) {
+                if (currentScroll > lastScroll && currentScroll > 200) {
+                    navbar.style.transform = 'translateY(-100%)';
+                } else {
+                    navbar.style.transform = 'translateY(0)';
+                }
+
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(function() {
+                    navbar.style.transform = 'translateY(0)';
+                }, 2000);
+            }
+
             lastScroll = currentScroll;
         }, { passive: true });
+
+        // Reset navbar transform when resizing above mobile breakpoint
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                navbar.style.transform = '';
+            }
+        });
     }
 
-    // Smooth scroll for anchor links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                // Close mobile menu if open
-                if (navLinks && navLinks.classList.contains('active')) {
-                    navLinks.classList.remove('active');
-                    const icon = mobileToggle.querySelector('i');
-                    if (icon) {
-                        icon.classList.remove('fa-times');
-                        icon.classList.add('fa-bars');
-                    }
+    // ─── MOBILE MENU ────────────────────────────────
+    // Create backdrop element
+    const backdrop = document.createElement('div');
+    backdrop.className = 'mobile-backdrop';
+    backdrop.id = 'mobileBackdrop';
+    document.body.appendChild(backdrop);
+
+    function closeMenu() {
+        navLinks.classList.remove('active');
+        backdrop.classList.remove('active');
+        const icon = mobileToggle.querySelector('i');
+        if (icon) {
+            icon.classList.remove('fa-times');
+            icon.classList.add('fa-bars');
+        }
+        document.body.style.overflow = '';
+    }
+
+    function openMenu() {
+        navLinks.classList.add('active');
+        backdrop.classList.add('active');
+        const icon = mobileToggle.querySelector('i');
+        if (icon) {
+            icon.classList.remove('fa-bars');
+            icon.classList.add('fa-times');
+        }
+        document.body.style.overflow = 'hidden';
+    }
+
+    if (mobileToggle && navLinks) {
+        mobileToggle.addEventListener('click', function() {
+            if (navLinks.classList.contains('active')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        backdrop.addEventListener('click', closeMenu);
+
+
+
+        // Close menu when clicking a nav link
+        navLinks.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', function() {
+                if (navLinks.classList.contains('active')) {
+                    closeMenu();
                 }
+            });
+        });
+    }
+
+    // ─── SMOOTH SCROLL FOR ANCHOR LINKS ─────────────
+    document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+        anchor.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            if (href === '#') return;
+            e.preventDefault();
+            const target = document.querySelector(href);
+            if (target) {
+                const navHeight = navbar ? navbar.offsetHeight : 80;
+                const targetPosition = target.getBoundingClientRect().top + window.scrollY - navHeight;
+                window.scrollTo({ top: targetPosition, behavior: 'smooth' });
             }
         });
     });
 
-    // File upload visual feedback
-    document.querySelectorAll('input[type="file"]').forEach(input => {
+    // ─── SCROLL REVEAL ANIMATIONS ───────────────────
+    if ('IntersectionObserver' in window) {
+        const revealObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.15,
+            rootMargin: '0px 0px -50px 0px'
+        });
+
+        document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(function(el) {
+            revealObserver.observe(el);
+        });
+    } else {
+        // Fallback: show all on load
+        document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(function(el) {
+            el.classList.add('revealed');
+        });
+    }
+
+    // ─── COUNTER ANIMATIONS ─────────────────────────
+    if ('IntersectionObserver' in window) {
+        const counterObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    const el = entry.target;
+                    const target = parseInt(el.getAttribute('data-count') || '0', 10);
+                    const suffix = el.getAttribute('data-suffix') || '';
+                    const prefix = el.getAttribute('data-prefix') || '';
+                    const duration = parseInt(el.getAttribute('data-duration') || '2000', 10);
+
+                    if (target > 0) {
+                        animateCounter(el, target, prefix, suffix, duration);
+                    }
+
+                    counterObserver.unobserve(el);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('[data-count]').forEach(function(el) {
+            counterObserver.observe(el);
+        });
+    }
+
+    function animateCounter(el, target, prefix, suffix, duration) {
+        const startTime = performance.now();
+        const startVal = 0;
+
+        function update(currentTime) {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+
+            // Ease out cubic
+            const eased = 1 - Math.pow(1 - progress, 3);
+            const current = Math.round(startVal + (target - startVal) * eased);
+
+            if (target >= 1000) {
+                el.textContent = prefix + current.toLocaleString() + suffix;
+            } else if (target === Math.floor(target)) {
+                el.textContent = prefix + current + suffix;
+            } else {
+                el.textContent = prefix + (current / 10).toFixed(1) + suffix;
+            }
+
+            if (progress < 1) {
+                requestAnimationFrame(update);
+            } else {
+                // Final value
+                if (target >= 1000) {
+                    el.textContent = prefix + target.toLocaleString() + suffix;
+                } else if (target === Math.floor(target)) {
+                    el.textContent = prefix + target + suffix;
+                } else {
+                    el.textContent = prefix + (target / 10).toFixed(1) + suffix;
+                }
+            }
+        }
+
+        requestAnimationFrame(update);
+    }
+
+    // ─── PARALLAX SCROLL EFFECT ────────────────────
+    if ('IntersectionObserver' in window) {
+        const parallaxObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                const el = entry.target;
+                if (entry.isIntersecting) {
+                    el.classList.add('parallax-active');
+                    parallaxObserver.unobserve(el);
+                }
+            });
+        }, { threshold: 0 });
+
+        window.addEventListener('scroll', function() {
+            document.querySelectorAll('.parallax-subtle.parallax-active').forEach(function(el) {
+                const speed = parseFloat(el.getAttribute('data-speed') || '0.03');
+                const rect = el.getBoundingClientRect();
+                const scrolled = rect.top / window.innerHeight;
+                el.style.transform = 'translateY(' + (scrolled * speed * 100) + 'px)';
+            });
+        }, { passive: true });
+
+        document.querySelectorAll('.parallax-subtle').forEach(function(el) {
+            parallaxObserver.observe(el);
+        });
+    }
+
+    // ─── FILE UPLOAD FEEDBACK ───────────────────────
+    document.querySelectorAll('input[type="file"]').forEach(function(input) {
         input.addEventListener('change', function() {
             const parent = this.closest('.file-upload-zone');
-            if (parent && this.files.length > 0) {
-                // Validate file types and sizes
+            if (!parent) return;
+
+            if (this.files.length > 0) {
                 const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
-                const maxSize = 5 * 1024 * 1024; // 5MB
+                const maxSize = 5 * 1024 * 1024;
                 let validFiles = [];
                 let errors = [];
 
-                for (let file of this.files) {
+                for (let i = 0; i < this.files.length; i++) {
+                    const file = this.files[i];
                     if (!allowedTypes.includes(file.type)) {
-                        errors.push(`${file.name}: Invalid file type. Only JPG, PNG, WebP allowed.`);
+                        errors.push(file.name + ': Invalid type. Only JPG, PNG, WebP accepted.');
                     } else if (file.size > maxSize) {
-                        errors.push(`${file.name}: File too large (max 5MB).`);
+                        errors.push(file.name + ': File too large (max 5MB).');
                     } else {
                         validFiles.push(file);
                     }
                 }
 
+                const iconSpan = parent.querySelector('i, .upload-icon') || document.createElement('i');
+                const heading = parent.querySelector('p strong, p:first-of-type') || document.createElement('p');
+                const note = parent.querySelector('p small, p:last-of-type') || document.createElement('p');
+
                 if (errors.length > 0) {
                     parent.innerHTML = `
-                        <i class="fas fa-exclamation-circle" style="color: var(--error); font-size: 2rem;"></i>
-                        <p style="color: var(--error); font-weight: 700;">${errors.length} file(s) rejected</p>
-                        <p><small>${errors[0]}${errors.length > 1 ? ' (+' + (errors.length - 1) + ' more)' : ''}</small></p>
+                        <i class="fas fa-exclamation-circle" style="color: var(--error); font-size: 2rem; display: block; margin-bottom: 8px;"></i>
+                        <p style="margin: 0 0 4px; font-weight: 700; color: var(--error);">${errors.length} file(s) rejected</p>
+                        <p style="margin: 0;"><small>${errors[0]}${errors.length > 1 ? ' (+' + (errors.length - 1) + ' more)' : ''}</small></p>
                     `;
                 } else {
                     parent.innerHTML = `
-                        <i class="fas fa-check-circle" style="color: var(--success); font-size: 2rem;"></i>
-                        <p style="color: var(--success); font-weight: 700;">${this.files.length} photo(s) selected</p>
-                        <p><small>Click to change selection</small></p>
+                        <i class="fas fa-check-circle" style="color: var(--success); font-size: 2rem; display: block; margin-bottom: 8px;"></i>
+                        <p style="margin: 0 0 4px; font-weight: 700; color: var(--success);">${this.files.length} photo(s) selected</p>
+                        <p style="margin: 0;"><small>Click to change</small></p>
                     `;
                 }
+
                 parent.appendChild(this);
                 this.style.display = 'none';
-            } else if (parent) {
-                parent.innerHTML = `
-                    <i class="fas fa-cloud-upload-alt"></i>
-                    <p><strong>Click to upload</strong> or drag photos here</p>
-                    <p><small>JPG, PNG, WebP only. Max 5MB per file.</small></p>
-                `;
+                parent.style.cursor = 'pointer';
+                parent.addEventListener('click', function handler() {
+                    input.click();
+                }, { once: false });
             }
         });
     });
 
-    // Form submission handling
-    document.querySelectorAll('form').forEach(form => {
-        form.addEventListener('submit', function(e) {
+    // ─── FORM SUBMISSION UX ─────────────────────────
+    document.querySelectorAll('form').forEach(function(form) {
+        form.addEventListener('submit', function() {
             const btn = this.querySelector('button[type="submit"]');
             if (btn && !btn.disabled) {
-                const originalText = btn.innerHTML;
+                const originalHTML = btn.innerHTML;
                 btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
                 btn.disabled = true;
+                btn.style.opacity = '0.8';
 
-                // Re-enable if submission fails (after 10s timeout)
-                setTimeout(() => {
+                setTimeout(function() {
                     if (btn.disabled) {
-                        btn.innerHTML = originalText;
+                        btn.innerHTML = originalHTML;
                         btn.disabled = false;
+                        btn.style.opacity = '1';
                     }
-                }, 10000);
+                }, 12000);
             }
         });
     });
 
-    // FAQ accordion
-    document.querySelectorAll('.faq-question').forEach(q => {
+    // ─── FAQ ACCORDION ──────────────────────────────
+    document.querySelectorAll('.faq-question').forEach(function(q) {
         q.addEventListener('click', function() {
             const item = this.parentElement;
             const isActive = item.classList.contains('active');
 
-            // Close all others
-            document.querySelectorAll('.faq-item.active').forEach(active => {
+            document.querySelectorAll('.faq-item.active').forEach(function(active) {
                 if (active !== item) active.classList.remove('active');
             });
 
-            // Toggle current
-            item.classList.toggle('active', !isActive);
+            if (!isActive) {
+                item.classList.add('active');
+            } else {
+                item.classList.remove('active');
+            }
         });
     });
 
-    // Flash message auto-dismiss
-    document.querySelectorAll('.flash-message').forEach(msg => {
-        setTimeout(() => {
+    // ─── FLASH MESSAGE AUTO-DISMISS ─────────────────
+    document.querySelectorAll('.flash-message').forEach(function(msg) {
+        setTimeout(function() {
             msg.style.opacity = '0';
             msg.style.transform = 'translateX(100%)';
             msg.style.transition = 'all 0.4s ease';
-            setTimeout(() => msg.remove(), 400);
+            setTimeout(function() { msg.remove(); }, 400);
         }, 5000);
     });
 
-    // Lazy load images
-    if ('IntersectionObserver' in window) {
-        const imgObserver = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const img = entry.target;
-                    if (img.dataset.src) {
-                        img.src = img.dataset.src;
-                        img.removeAttribute('data-src');
-                        observer.unobserve(img);
-                    }
-                }
+    // ─── LAZY LOAD IMAGES ───────────────────────────
+    if ('loading' in HTMLImageElement.prototype) {
+        // Native lazy loading supported — use browser-native
+        document.querySelectorAll('img[loading="lazy"]').forEach(function(img) {
+            img.addEventListener('load', function() {
+                img.classList.add('loaded');
             });
-        }, { rootMargin: '200px' });
-
-        document.querySelectorAll('img[data-src]').forEach(img => {
-            imgObserver.observe(img);
+            if (img.complete) {
+                img.classList.add('loaded');
+            }
         });
+    } else {
+        // Fallback for older browsers
+        if ('IntersectionObserver' in window) {
+            const imgObserver = new IntersectionObserver(function(entries, observer) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        if (img.dataset.src) {
+                            img.src = img.dataset.src;
+                            img.removeAttribute('data-src');
+                            img.addEventListener('load', function() {
+                                img.classList.add('loaded');
+                            });
+                            observer.unobserve(img);
+                        }
+                    }
+                });
+            }, { rootMargin: '200px' });
+
+            document.querySelectorAll('img[data-src]').forEach(function(img) {
+                imgObserver.observe(img);
+            });
+        }
     }
 
-    // Admin sidebar mobile toggle
+    // ─── ADMIN SIDEBAR MOBILE ───────────────────────
     const adminToggle = document.getElementById('adminToggle');
     const adminSidebar = document.querySelector('.admin-sidebar');
     if (adminToggle && adminSidebar) {
+        const adminOverlay = document.createElement('div');
+        adminOverlay.className = 'mobile-backdrop';
+        adminSidebar.parentNode.insertBefore(adminOverlay, adminSidebar.nextSibling);
+
         adminToggle.addEventListener('click', function() {
             adminSidebar.classList.toggle('open');
+            adminOverlay.classList.toggle('active');
         });
+
+        adminOverlay.addEventListener('click', function() {
+            adminSidebar.classList.remove('open');
+            adminOverlay.classList.remove('active');
+        });
+    }
+});
+
+// ─── COMBINED ESCAPE KEY HANDLER ──────────────────
+document.addEventListener('keydown', function(e) {
+    if (e.key !== 'Escape') return;
+
+    // Priority 1: Close mobile menu if it's open
+    if (navLinks && navLinks.classList.contains('active')) {
+        closeMenu();
+        return;
+    }
+
+    // Priority 2: Scroll to top when body is focused
+    if (document.activeElement === document.body) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 });

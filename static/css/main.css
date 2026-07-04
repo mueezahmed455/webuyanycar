@@ -1792,3 +1792,380 @@ a {
     background: rgba(201, 162, 39, 0.3);
     color: var(--navy);
 }
+
+/* ============================================
+   SCROLL PROGRESS BAR
+   ============================================ */
+
+.scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--gold) 0%, var(--gold-light) 50%, var(--navy) 100%);
+    z-index: 2000;
+    width: 0%;
+    transition: width 0.1s linear;
+    border-radius: 0 2px 2px 0;
+}
+
+/* ============================================
+   BACK TO TOP BUTTON
+   ============================================ */
+
+.back-to-top {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    width: 52px;
+    height: 52px;
+    background: var(--navy);
+    color: var(--gold);
+    border: 2px solid rgba(201, 162, 39, 0.3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 1500;
+    opacity: 0;
+    transform: translateY(20px);
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--shadow-lg);
+    font-size: 1.1rem;
+}
+
+.back-to-top.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.back-to-top:hover {
+    background: var(--gold);
+    color: var(--navy);
+    border-color: var(--gold);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(201, 162, 39, 0.4);
+}
+
+/* ============================================
+   SCROLL REVEAL ANIMATIONS
+   ============================================ */
+
+.reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.reveal.revealed {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.reveal-left {
+    opacity: 0;
+    transform: translateX(-60px);
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.reveal-left.revealed {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.reveal-right {
+    opacity: 0;
+    transform: translateX(60px);
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.reveal-right.revealed {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.reveal-scale {
+    opacity: 0;
+    transform: scale(0.9);
+    transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.reveal-scale.revealed {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Staggered children delays */
+.stagger > *:nth-child(1) { transition-delay: 0ms; }
+.stagger > *:nth-child(2) { transition-delay: 100ms; }
+.stagger > *:nth-child(3) { transition-delay: 200ms; }
+.stagger > *:nth-child(4) { transition-delay: 300ms; }
+.stagger > *:nth-child(5) { transition-delay: 400ms; }
+.stagger > *:nth-child(6) { transition-delay: 500ms; }
+.stagger > *:nth-child(7) { transition-delay: 600ms; }
+.stagger > *:nth-child(8) { transition-delay: 700ms; }
+
+/* ============================================
+   COUNTER ANIMATION
+   ============================================ */
+
+.counter {
+    display: inline-block;
+}
+
+/* ============================================
+   PULSE CTA ANIMATION
+   ============================================ */
+
+@keyframes pulse-glow {
+    0%, 100% {
+        box-shadow: 0 4px 14px rgba(201, 162, 39, 0.3);
+    }
+    50% {
+        box-shadow: 0 4px 28px rgba(201, 162, 39, 0.55);
+    }
+}
+
+.btn-primary.pulse {
+    animation: pulse-glow 2s infinite;
+}
+
+/* ============================================
+   PARALLAX & DEPTH EFFECTS
+   ============================================ */
+
+.parallax-subtle {
+    transition: transform 0.1s linear;
+    will-change: transform;
+}
+
+/* Floating shapes in hero */
+.hero::after {
+    content: '';
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201, 162, 39, 0.06) 0%, transparent 70%);
+    top: -200px;
+    right: -200px;
+    pointer-events: none;
+    animation: float-shape 20s ease-in-out infinite;
+}
+
+@keyframes float-shape {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(30px, -30px) scale(1.05); }
+    66% { transform: translate(-20px, 20px) scale(0.95); }
+}
+
+/* ============================================
+   GLOWING DIVIDER
+   ============================================ */
+
+.glow-divider {
+    width: 80px;
+    height: 4px;
+    background: var(--gold);
+    border-radius: 2px;
+    margin: 24px auto;
+    position: relative;
+}
+
+.glow-divider::after {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    background: var(--gold);
+    border-radius: 6px;
+    filter: blur(12px);
+    opacity: 0.3;
+}
+
+/* ============================================
+   HOVER LIFT EFFECTS
+   ============================================ */
+
+.hover-lift {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-xl);
+}
+
+.hover-lift-sm {
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-lift-sm:hover {
+    transform: translateY(-3px);
+}
+
+/* ============================================
+   SKELETON LOADING
+   ============================================ */
+
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+.skeleton {
+    background: linear-gradient(90deg, var(--off-white) 25%, var(--border) 50%, var(--off-white) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 8px;
+}
+
+/* ============================================
+   FOCUS-VISIBLE ENHANCEMENT
+   ============================================ */
+
+:focus-visible {
+    outline: 3px solid var(--gold);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+/* ============================================
+   GLASS MORPHISM CARDS (optional variation)
+   ============================================ */
+
+.glass-card {
+    background: rgba(250, 249, 247, 0.85);
+    backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(226, 224, 218, 0.6);
+    box-shadow: var(--shadow-md);
+}
+
+/* ============================================
+   SMOOTH SECTION DIVIDERS
+   ============================================ */
+
+.section-divider-wave {
+    position: relative;
+}
+
+.section-divider-wave::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: url("data:image/svg+xml,%3Csvg viewBox='0 0 1200 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 30 Q 150 0, 300 30 T 600 30 T 900 30 T 1200 30 L 1200 60 L 0 60 Z' fill='%23f5f4f0'/%3E%3C/svg%3E");
+    background-size: cover;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* ============================================
+   MOBILE MENU BACKDROP
+   ============================================ */
+
+.mobile-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 22, 40, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.mobile-backdrop.active {
+    display: block;
+    opacity: 1;
+}
+
+/* ============================================
+   ANIMATED UNDERLINE
+   ============================================ */
+
+.underline-animated {
+    position: relative;
+}
+
+.underline-animated::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--gold);
+    transition: width 0.3s ease;
+}
+
+.underline-animated:hover::after {
+    width: 100%;
+}
+
+/* ============================================
+   BADGE PULSE
+   ============================================ */
+
+@keyframes badge-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(201, 162, 39, 0.4); }
+    50% { box-shadow: 0 0 0 8px rgba(201, 162, 39, 0); }
+}
+
+.badge-live {
+    animation: badge-pulse 2s infinite;
+}
+
+/* ============================================
+   IMAGE FADE-IN
+   ============================================ */
+
+img[loading="lazy"] {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+img[loading="lazy"].loaded {
+    opacity: 1;
+}
+
+/* ============================================
+   RESPONSIVE ADJUSTMENTS FOR NEW ELEMENTS
+   ============================================ */
+
+@media (max-width: 768px) {
+    .back-to-top {
+        bottom: 20px;
+        right: 20px;
+        width: 44px;
+        height: 44px;
+        font-size: 1rem;
+    }
+
+    .scroll-progress {
+        height: 2px;
+    }
+
+    .reveal,
+    .reveal-left,
+    .reveal-right,
+    .reveal-scale {
+        transform: translateY(24px);
+    }
+
+    .reveal-left {
+        transform: translateX(-24px);
+    }
+
+    .reveal-right {
+        transform: translateX(24px);
+    }
+
+    .reveal-scale {
+        transform: scale(0.95);
+    }
+}

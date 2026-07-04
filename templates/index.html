@@ -17,11 +17,11 @@
 
             <div class="hero-stats">
                 <div class="stat-item">
-                    <div class="stat-number">50K+</div>
+                    <div class="stat-number counter" data-count="50000" data-suffix="+" data-duration="2500">50K+</div>
                     <div class="stat-label">Cars Bought</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number">£50M+</div>
+                    <div class="stat-number counter" data-count="50000000" data-prefix="£" data-suffix="+" data-duration="2500">£50M+</div>
                     <div class="stat-label">Paid Out</div>
                 </div>
                 <div class="stat-item">
@@ -31,7 +31,7 @@
             </div>
 
             <div class="hero-actions">
-                <a href="{{ url_for('quote') }}" class="btn btn-primary">
+                <a href="{{ url_for('quote') }}" class="btn btn-primary pulse">
                     <i class="fas fa-bolt"></i> Get Instant Quote
                 </a>
                 <a href="{{ url_for('how_it_works') }}" class="btn btn-outline">
@@ -137,7 +137,7 @@
 </section>
 
 <!-- Trust Bar -->
-<section class="trust-bar">
+<section class="trust-bar reveal">
     <div class="trust-container">
         <div class="trust-item">
             <i class="fas fa-pound-sign"></i>
@@ -171,7 +171,7 @@
 </section>
 
 <!-- How It Works -->
-<section class="section" id="how-it-works">
+<section class="section section-divider-wave" id="how-it-works">
     <div class="section-container">
         <div class="section-header center">
             <div class="section-label">The Process</div>
@@ -180,28 +180,28 @@
         </div>
         <div class="steps-wrapper">
             <div class="steps-line"></div>
-            <div class="steps-grid">
-                <div class="step-card">
+            <div class="steps-grid stagger">
+                <div class="step-card reveal">
                     <div class="step-number">1</div>
                     <h4>Submit Vehicle</h4>
                     <p>Enter your car details and upload photos through our quick online form</p>
                 </div>
-                <div class="step-card">
+                <div class="step-card reveal">
                     <div class="step-number">2</div>
                     <h4>Get Valuation</h4>
                     <p>Receive your instant, no-obligation quote based on live market data</p>
                 </div>
-                <div class="step-card">
+                <div class="step-card reveal">
                     <div class="step-number">3</div>
                     <h4>Accept Offer</h4>
                     <p>Happy with the price? Accept the offer and we lock it in for 7 days</p>
                 </div>
-                <div class="step-card">
+                <div class="step-card reveal">
                     <div class="step-number">4</div>
                     <h4>Arrange Collection</h4>
                     <p>We pick up your vehicle at a time that suits you, completely free</p>
                 </div>
-                <div class="step-card">
+                <div class="step-card reveal">
                     <div class="step-number">5</div>
                     <h4>Get Paid</h4>
                     <p>Money transferred to your bank account instantly on collection day</p>
@@ -219,43 +219,43 @@
             <h2>We Buy Any Vehicle — Seriously</h2>
             <p>Don't let condition stop you. We purchase vehicles that private buyers and dealers won't touch.</p>
         </div>
-        <div class="cards-grid">
-            <div class="card">
+        <div class="cards-grid stagger">
+            <div class="card reveal">
                 <div class="card-icon"><i class="fas fa-car-side"></i></div>
                 <h4>Used & Old</h4>
                 <p>High mileage vehicles, older models — we buy them all regardless of age or wear</p>
             </div>
-            <div class="card">
+            <div class="card reveal">
                 <div class="card-icon"><i class="fas fa-car-crash"></i></div>
                 <h4>Damaged & Accident</h4>
                 <p>Write-offs, Category S/N vehicles, bodywork damage — all accepted</p>
             </div>
-            <div class="card">
+            <div class="card reveal">
                 <div class="card-icon"><i class="fas fa-tools"></i></div>
                 <h4>Non-Runners</h4>
                 <p>Engine failure, gearbox issues, electrical faults — no problem at all</p>
             </div>
-            <div class="card">
+            <div class="card reveal">
                 <div class="card-icon"><i class="fas fa-recycle"></i></div>
                 <h4>Scrap & Salvage</h4>
                 <p>End of life vehicles, parts cars, salvage — we'll still pay you cash</p>
             </div>
-            <div class="card">
+            <div class="card reveal">
                 <div class="card-icon"><i class="fas fa-times-circle"></i></div>
                 <h4>MOT Failed</h4>
                 <p>Failed MOT? Expired test? We buy MOT failure vehicles every single day</p>
             </div>
-            <div class="card">
+            <div class="card reveal">
                 <div class="card-icon"><i class="fas fa-file-contract"></i></div>
                 <h4>Leased & Financed</h4>
                 <p>Still under finance or lease? We can settle it and buy your car outright</p>
             </div>
-            <div class="card">
+            <div class="card reveal">
                 <div class="card-icon"><i class="fas fa-tachometer-alt"></i></div>
                 <h4>High Mileage</h4>
                 <p>200K+ miles? Commercial use? We don't discriminate on mileage</p>
             </div>
-            <div class="card">
+            <div class="card reveal">
                 <div class="card-icon"><i class="fas fa-truck-pickup"></i></div>
                 <h4>Vans & Commercial</h4>
                 <p>Not just cars — vans, pickups, minibuses, and commercial vehicles too</p>
@@ -272,33 +272,33 @@
             <h2>Why Sell To Us?</h2>
             <p>We're not just another car buying service. Here's what sets us apart from the competition.</p>
         </div>
-        <div class="cards-grid-3">
-            <div class="feature-card">
+        <div class="cards-grid-3 stagger">
+            <div class="feature-card reveal">
                 <div class="feature-icon"><i class="fas fa-bolt"></i></div>
                 <h4>Instant Money</h4>
                 <p>No waiting around. Payment hits your account the same day we collect your vehicle. Bank transfer, cash, or cheque — your choice.</p>
             </div>
-            <div class="feature-card">
+            <div class="feature-card reveal">
                 <div class="feature-icon"><i class="fas fa-calculator"></i></div>
                 <h4>Instant Valuation</h4>
                 <p>Our system uses real-time market data from CAP, Glass's Guide, and live auction prices to give you the most accurate valuation in 60 seconds.</p>
             </div>
-            <div class="feature-card">
+            <div class="feature-card reveal">
                 <div class="feature-icon"><i class="fas fa-pound-sign"></i></div>
                 <h4>Best Price Guaranteed</h4>
                 <p>Beat any genuine quote from competitors. We'll match it and beat it by £100 — guaranteed.</p>
             </div>
-            <div class="feature-card">
+            <div class="feature-card reveal">
                 <div class="feature-icon"><i class="fas fa-home"></i></div>
                 <h4>Free Home Collection</h4>
                 <p>We come to you. Our drivers collect from your home, workplace, or garage — anywhere in England, Scotland, Wales & Northern Ireland.</p>
             </div>
-            <div class="feature-card">
+            <div class="feature-card reveal">
                 <div class="feature-icon"><i class="fas fa-handshake"></i></div>
                 <h4>No Haggling</h4>
                 <p>The price we quote is the price you get. No hidden fees, no admin charges, no last-minute reductions. Transparent pricing, always.</p>
             </div>
-            <div class="feature-card">
+            <div class="feature-card reveal">
                 <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
                 <h4>Fully Insured & Licensed</h4>
                 <p>We're a licensed motor trader with full trade insurance coverage. Your vehicle is protected from the moment we take possession.</p>
@@ -315,8 +315,8 @@
             <h2>What Our Customers Say</h2>
             <p>Real reviews from real sellers across the UK who used our service.</p>
         </div>
-        <div class="testimonials-grid">
-            <div class="testimonial-card">
+        <div class="testimonials-grid stagger">
+            <div class="testimonial-card reveal">
                 <div class="stars">
                     <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
                 </div>
@@ -329,7 +329,7 @@
                     </div>
                 </div>
             </div>
-            <div class="testimonial-card">
+            <div class="testimonial-card reveal">
                 <div class="stars">
                     <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
                 </div>
@@ -342,7 +342,7 @@
                     </div>
                 </div>
             </div>
-            <div class="testimonial-card">
+            <div class="testimonial-card reveal">
                 <div class="stars">
                     <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
                 </div>
@@ -360,7 +360,7 @@
 </section>
 
 <!-- CTA Banner -->
-<section class="cta-banner">
+<section class="cta-banner reveal">
     <div class="section-container">
         <h2>Ready to Sell Your Car?</h2>
         <p>Get your free, instant valuation in under 60 seconds. No obligation, no pressure.</p>
