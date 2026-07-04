@@ -1,5 +1,5 @@
 """
-WeBuyAnyCar UK - Vercel Serverless Entry Point
+WeBuyAnyVehicle UK - Vercel Serverless Entry Point
 Production-ready Flask app for serverless deployment on Vercel.
 Stateless: PostgreSQL + JWT + Vercel Blob + QStash queue.
 """
@@ -67,7 +67,7 @@ class JSONFormatter(logging.Formatter):
             log_entry['exception'] = self.formatException(record.exc_info)
         return json.dumps(log_entry)
 
-logger = logging.getLogger('webuyanycar')
+logger = logging.getLogger('webuyanyvehicle')
 logger.setLevel(logging.INFO)
 if not logger.handlers:
     handler = logging.StreamHandler(sys.stdout)
@@ -439,7 +439,7 @@ def send_email_sync(subject, body, to_email):
         port = int(os.environ.get('MAIL_PORT', 587))
         username = os.environ.get('MAIL_USERNAME', '')
         password = os.environ.get('MAIL_PASSWORD', '')
-        sender = os.environ.get('MAIL_DEFAULT_SENDER', 'quotes@webuyanycar.co.uk')
+        sender = os.environ.get('MAIL_DEFAULT_SENDER', 'quotes@webuyanyvehicle.co.uk')
 
         if not all([username, password]):
             logger.warning("Email credentials not configured")
@@ -449,7 +449,7 @@ def send_email_sync(subject, body, to_email):
         msg['Subject'] = subject
         msg['From'] = sender
         msg['To'] = to_email
-        msg['X-Mailer'] = 'WeBuyAnyCar UK'
+        msg['X-Mailer'] = 'WeBuyAnyVehicle UK'
 
         with smtplib.SMTP(server, port) as s:
             s.starttls()
@@ -567,9 +567,9 @@ def admin_required(f):
 def inject_globals():
     return {
         'csrf_token': request.cookies.get('csrf_token', ''),
-        'company_name': os.environ.get('COMPANY_NAME', 'WeBuyAnyCar UK'),
+        'company_name': os.environ.get('COMPANY_NAME', 'WeBuyAnyVehicle UK'),
         'company_phone': os.environ.get('COMPANY_PHONE', '0800 123 4567'),
-        'company_email': os.environ.get('COMPANY_EMAIL', 'quotes@webuyanycar.co.uk'),
+        'company_email': os.environ.get('COMPANY_EMAIL', 'quotes@webuyanyvehicle.co.uk'),
         'company_address': os.environ.get('COMPANY_ADDRESS', 'Birmingham, UK'),
     }
 
@@ -700,7 +700,7 @@ def quote():
         send_email_async(
             email_subject,
             email_body,
-            os.environ.get('MAIL_DEFAULT_SENDER', 'quotes@webuyanycar.co.uk'),
+            os.environ.get('MAIL_DEFAULT_SENDER', 'quotes@webuyanyvehicle.co.uk'),
             host_url=request.host_url
         )
 
@@ -751,7 +751,7 @@ def contact():
         send_email_async(
             email_subject,
             email_body,
-            os.environ.get('MAIL_DEFAULT_SENDER', 'quotes@webuyanycar.co.uk'),
+            os.environ.get('MAIL_DEFAULT_SENDER', 'quotes@webuyanyvehicle.co.uk'),
             host_url=request.host_url
         )
 

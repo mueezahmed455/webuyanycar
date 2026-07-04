@@ -1,4 +1,4 @@
-# WeBuyAnyCar UK — Vercel Serverless Deployment
+# WeBuyAnyVehicle UK — Vercel Serverless Deployment
 
 Production-ready Flask application for serverless deployment on Vercel. Stateless architecture using PostgreSQL (Vercel Postgres), JWT authentication, Vercel Blob storage, and secure form handling.
 
@@ -151,10 +151,10 @@ python api/index.py
 
 ```bash
 # Add domain in Vercel dashboard
-vercel domains add webuyanycar.co.uk
+vercel domains add webuyanyvehicle.co.uk
 
 # Or via CLI
-vercel domains add yourdomain.com --project webuyanycar
+vercel domains add yourdomain.com --project webuyanyvehicle
 ```
 
 ## Scaling
@@ -177,4 +177,4 @@ vercel domains add yourdomain.com --project webuyanycar
 
 ## License
 
-Proprietary — WeBuyAnyCar UK Ltd
+Proprietary — WeBuyAnyVehicle UK Ltd

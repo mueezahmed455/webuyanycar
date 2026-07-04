@@ -1,4 +1,4 @@
-// WeBuyAnyCar UK - Main JavaScript
+// WeBuyAnyVehicle UK - Main JavaScript
 // Vanilla JS, no dependencies
 
 document.addEventListener('DOMContentLoaded', function() {
