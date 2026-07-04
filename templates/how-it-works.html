@@ -5,14 +5,14 @@
 {% block content %}
 <section class="section" style="padding-top: 140px;">
     <div class="section-container">
-        <div class="section-header center">
+        <div class="section-header center reveal">
             <div class="section-label">The Process</div>
             <h2>How It Works</h2>
             <p>We've stripped away the complexity of selling a car. No haggling, no tyre-kickers, no waiting weeks for a buyer. Just five straightforward steps from quote to payment.</p>
         </div>
 
         <div style="max-width: 800px; margin: 0 auto;">
-            <div style="display: flex; gap: 32px; margin-bottom: 60px; align-items: flex-start;">
+            <div class="reveal step-row" style="display: flex; gap: 32px; margin-bottom: 60px; align-items: flex-start;">
                 <div style="flex-shrink: 0; width: 64px; height: 64px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 900; color: var(--navy); box-shadow: var(--shadow-lg);">1</div>
                 <div>
                     <h3 style="margin-bottom: 12px;">Submit Your Vehicle Details</h3>
@@ -22,7 +22,7 @@
                 </div>
             </div>
 
-            <div style="display: flex; gap: 32px; margin-bottom: 60px; align-items: flex-start;">
+            <div class="reveal step-row" style="display: flex; gap: 32px; margin-bottom: 60px; align-items: flex-start;">
                 <div style="flex-shrink: 0; width: 64px; height: 64px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 900; color: var(--navy); box-shadow: var(--shadow-lg);">2</div>
                 <div>
                     <h3 style="margin-bottom: 12px;">Receive Your Instant Valuation</h3>
@@ -32,7 +32,7 @@
                 </div>
             </div>
 
-            <div style="display: flex; gap: 32px; margin-bottom: 60px; align-items: flex-start;">
+            <div class="reveal step-row" style="display: flex; gap: 32px; margin-bottom: 60px; align-items: flex-start;">
                 <div style="flex-shrink: 0; width: 64px; height: 64px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 900; color: var(--navy); box-shadow: var(--shadow-lg);">3</div>
                 <div>
                     <h3 style="margin-bottom: 12px;">Accept The Offer</h3>
@@ -42,7 +42,7 @@
                 </div>
             </div>
 
-            <div style="display: flex; gap: 32px; margin-bottom: 60px; align-items: flex-start;">
+            <div class="reveal step-row" style="display: flex; gap: 32px; margin-bottom: 60px; align-items: flex-start;">
                 <div style="flex-shrink: 0; width: 64px; height: 64px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 900; color: var(--navy); box-shadow: var(--shadow-lg);">4</div>
                 <div>
                     <h3 style="margin-bottom: 12px;">Arrange Free Collection</h3>
@@ -52,7 +52,7 @@
                 </div>
             </div>
 
-            <div style="display: flex; gap: 32px; margin-bottom: 60px; align-items: flex-start;">
+            <div class="reveal step-row" style="display: flex; gap: 32px; margin-bottom: 60px; align-items: flex-start;">
                 <div style="flex-shrink: 0; width: 64px; height: 64px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 900; color: var(--navy); box-shadow: var(--shadow-lg);">5</div>
                 <div>
                     <h3 style="margin-bottom: 12px;">Get Paid Instantly</h3>
@@ -63,7 +63,7 @@
             </div>
         </div>
 
-        <div style="text-align: center; margin-top: 40px;">
+        <div class="reveal" style="text-align: center; margin-top: 40px;">
             <a href="{{ url_for('quote') }}" class="btn btn-primary" style="font-size: 1.1rem; padding: 18px 40px;">
                 <i class="fas fa-bolt"></i> Start Your Quote Now
             </a>

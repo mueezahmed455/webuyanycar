@@ -5,14 +5,14 @@
 {% block content %}
 <section class="section" style="padding-top: 140px;">
     <div class="section-container">
-        <div class="section-header center">
+        <div class="section-header center reveal">
             <div class="section-label">Help Centre</div>
             <h2>Frequently Asked Questions</h2>
             <p>Everything you need to know about selling your car to us. Can't find your answer? <a href="{{ url_for('contact') }}" style="color: var(--gold-dark); text-decoration: underline;">Contact us</a> directly.</p>
         </div>
 
-        <div class="faq-grid">
-            <div class="faq-item">
+        <div class="faq-grid stagger">
+            <div class="faq-item reveal">
                 <div class="faq-question">
                     <span>How long is my quote valid for?</span>
                     <i class="fas fa-chevron-down"></i>
@@ -133,7 +133,7 @@
             </div>
         </div>
 
-        <div style="text-align: center; margin-top: 60px;">
+        <div class="reveal" style="text-align: center; margin-top: 60px;">
             <p style="margin-bottom: 20px; color: var(--slate);">Still have questions?</p>
             <a href="{{ url_for('contact') }}" class="btn btn-primary">
                 <i class="fas fa-envelope"></i> Contact Us

@@ -116,6 +116,43 @@ document.addEventListener('DOMContentLoaded', function() {
 
         backdrop.addEventListener('click', closeMenu);
 
+        // Swipe-to-close: detect rightward swipe on navLinks panel
+        let touchStartX = 0;
+        let touchStartY = 0;
+
+        navLinks.addEventListener('touchstart', function(e) {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+        }, { passive: true });
+
+        navLinks.addEventListener('touchend', function(e) {
+            const touchEndX = e.changedTouches[0].clientX;
+            const touchEndY = e.changedTouches[0].clientY;
+            const diffX = touchEndX - touchStartX;
+            const diffY = touchEndY - touchStartY;
+
+            // Rightward swipe (close menu) — must be more horizontal than vertical
+            if (diffX > 60 && Math.abs(diffX) > Math.abs(diffY) * 1.5) {
+                closeMenu();
+            }
+        });
+
+        // Also allow swiping right on the backdrop to close
+        backdrop.addEventListener('touchstart', function(e) {
+            touchStartX = e.touches[0].clientX;
+        }, { passive: true });
+
+        backdrop.addEventListener('touchend', function(e) {
+            const touchEndX = e.changedTouches[0].clientX;
+            const touchEndY = e.changedTouches[0].clientY;
+            const diffX = touchEndX - touchStartX;
+            const diffY = Math.abs(touchEndY - touchStartY);
+            // Must be a rightward swipe that's more horizontal than vertical
+            if (diffX > 50 && Math.abs(diffX) > diffY) {
+                closeMenu();
+            }
+        });
+
 
 
         // Close menu when clicking a nav link

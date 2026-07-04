@@ -5,13 +5,13 @@
 {% block content %}
 <section class="quote-section">
     <div class="section-container">
-        <div class="section-header center">
+        <div class="section-header center reveal">
             <div class="section-label">Get Your Quote</div>
             <h2>Instant Car Valuation</h2>
             <p>Fill in your vehicle details below and receive a no-obligation cash offer in under 60 seconds.</p>
         </div>
 
-        <div class="quote-form-box">
+        <div class="quote-form-box reveal-scale">
             <form action="{{ url_for('quote') }}" method="POST" enctype="multipart/form-data">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 
