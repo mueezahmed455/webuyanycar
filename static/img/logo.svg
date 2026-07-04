@@ -1,47 +1,37 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 64" width="240" height="64">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 56" width="280" height="56">
   <defs>
-    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#0a1628"/>
-      <stop offset="100%" style="stop-color:#1a2d4a"/>
-    </linearGradient>
-    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="0%">
       <stop offset="0%" style="stop-color:#c9a227"/>
       <stop offset="100%" style="stop-color:#e0c04d"/>
     </linearGradient>
   </defs>
 
-  <!-- Shield shape -->
-  <path d="M14 4 L38 1 L52 8 L56 20 L52 38 L38 50 L24 50 L10 38 L6 20 L10 8 Z" fill="url(#shieldGrad)" stroke="url(#goldGrad)" stroke-width="2"/>
-
-  <!-- Road/ground line -->
-  <line x1="12" y1="36" x2="50" y2="36" stroke="url(#goldGrad)" stroke-width="1.5" opacity="0.5"/>
-
-  <!-- Car body -->
-  <g fill="#ffffff">
-    <path d="M16 32 L22 24 L32 22 L40 24 L46 32 L46 36 L16 36 Z" opacity="0.95"/>
-    <!-- Windows -->
-    <path d="M23 25 L31 23 L38 25 L38 28 L23 28 Z" fill="#c9a227" opacity="0.85"/>
-    <!-- Wheels -->
-    <circle cx="23" cy="36" r="3.5" fill="#0a1628" stroke="url(#goldGrad)" stroke-width="1.2"/>
-    <circle cx="39" cy="36" r="3.5" fill="#0a1628" stroke="url(#goldGrad)" stroke-width="1.2"/>
-    <!-- Wheel hubs -->
-    <circle cx="23" cy="36" r="1.2" fill="#c9a227"/>
-    <circle cx="39" cy="36" r="1.2" fill="#c9a227"/>
-    <!-- Headlight -->
-    <ellipse cx="45" cy="30" rx="1.5" ry="2.5" fill="#e0c04d"/>
-    <!-- Tail light -->
-    <ellipse cx="17" cy="30" rx="1" ry="2" fill="#c9a227" opacity="0.6"/>
+  <!-- Icon: stylised speed/road mark -->
+  <g transform="translate(4,4)">
+    <!-- Outer ring -->
+    <circle cx="22" cy="22" r="21" fill="none" stroke="#0a1628" stroke-width="2.5"/>
+    <!-- Inner accent ring -->
+    <circle cx="22" cy="22" r="15" fill="none" stroke="url(#g)" stroke-width="2" stroke-dasharray="6 3"/>
+    <!-- Speed arrow -->
+    <polygon points="22,6 29,22 22,18 15,22" fill="url(#g)"/>
+    <!-- Road line -->
+    <line x1="8" y1="30" x2="36" y2="30" stroke="#0a1628" stroke-width="2.5" stroke-linecap="round"/>
+    <!-- Car silhouette dots -->
+    <circle cx="14" cy="36" r="3.5" fill="#0a1628"/>
+    <circle cx="30" cy="36" r="3.5" fill="#0a1628"/>
+    <circle cx="14" cy="36" r="1.2" fill="url(#g)"/>
+    <circle cx="30" cy="36" r="1.2" fill="url(#g)"/>
   </g>
 
-  <!-- Brand text - bold and clean -->
-  <text x="66" y="24" font-family="'Inter', Arial, Helvetica, sans-serif" font-weight="900" font-size="15" fill="#0a1628" letter-spacing="-0.5">WeBuy</text>
-  <text x="66" y="42" font-family="'Inter', Arial, Helvetica, sans-serif" font-weight="900" font-size="15" fill="#0a1628" letter-spacing="-0.5">AnyVehicle</text>
+  <!-- Wordmark -->
+  <text x="58" y="24" font-family="'Inter',Arial,Helvetica,sans-serif" font-weight="900" font-size="18" fill="#0a1628" letter-spacing="-0.3">webuy</text>
+  <text x="115" y="24" font-family="'Inter',Arial,Helvetica,sans-serif" font-weight="900" font-size="18" fill="url(#g)" letter-spacing="-0.3">any</text>
+  <text x="153" y="24" font-family="'Inter',Arial,Helvetica,sans-serif" font-weight="900" font-size="18" fill="#0a1628" letter-spacing="-0.3">vehicle</text>
 
-  <!-- UK Badge - polished -->
-  <rect x="166" y="14" width="36" height="18" rx="5" fill="url(#goldGrad)"/>
-  <rect x="166" y="14" width="36" height="18" rx="5" fill="none" stroke="#a0801a" stroke-width="0.5" opacity="0.5"/>
-  <text x="184" y="27" font-family="'Inter', Arial, Helvetica, sans-serif" font-weight="800" font-size="10" fill="#0a1628" text-anchor="middle" letter-spacing="1">UK</text>
+  <!-- UK badge -->
+  <rect x="228" y="9" width="32" height="16" rx="4" fill="url(#g)"/>
+  <text x="244" y="21" font-family="'Inter',Arial,Helvetica,sans-serif" font-weight="800" font-size="9" fill="#0a1628" text-anchor="middle" letter-spacing="1">UK</text>
 
   <!-- Tagline -->
-  <text x="66" y="56" font-family="'Inter', Arial, Helvetica, sans-serif" font-weight="600" font-size="7" fill="#4a5568" letter-spacing="0.5">LICENSED MOTOR TRADER</text>
+  <text x="58" y="46" font-family="'Inter',Arial,Helvetica,sans-serif" font-weight="700" font-size="7.5" fill="#4a5568" letter-spacing="1.2">LICENSED MOTOR TRADER</text>
 </svg>
