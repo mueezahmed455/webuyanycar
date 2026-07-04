@@ -3,7 +3,11 @@
   "builds": [
     {
       "src": "api/index.py",
-      "use": "@vercel/python"
+      "use": "@vercel/python",
+      "config": {
+        "memory": 512,
+        "maxDuration": 30
+      }
     }
   ],
   "routes": [
@@ -29,11 +33,5 @@
     "FLASK_ENV": "production",
     "PYTHONPATH": "."
   },
-  "regions": ["lhr1"],
-  "functions": {
-    "api/index.py": {
-      "memory": 512,
-      "maxDuration": 30
-    }
-  }
+  "regions": ["lhr1"]
 }
