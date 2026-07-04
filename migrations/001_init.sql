@@ -1,4 +1,4 @@
--- WeBuyAnyVehicle UK - PostgreSQL Migration Script
+-- webuyanyvehicle UK - PostgreSQL Migration Script
 -- Run once via: psql $POSTGRES_URL_NON_POOLING -f migrations/001_init.sql
 
 -- Create extension for UUID generation if not available

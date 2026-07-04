@@ -1,4 +1,4 @@
-# WeBuyAnyVehicle UK — Vercel Serverless Deployment
+# webuyanyvehicle UK — Vercel Serverless Deployment
 
 Production-ready Flask application for serverless deployment on Vercel. Stateless architecture using PostgreSQL (Vercel Postgres), JWT authentication, Vercel Blob storage, and secure form handling.
 

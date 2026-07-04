@@ -1,5 +1,5 @@
 """
-WeBuyAnyVehicle UK - Vercel Serverless Entry Point
+webuyanyvehicle UK - Vercel Serverless Entry Point
 Production-ready Flask app for serverless deployment on Vercel.
 Stateless: PostgreSQL + JWT + Vercel Blob + QStash queue.
 """
@@ -449,7 +449,7 @@ def send_email_sync(subject, body, to_email):
         msg['Subject'] = subject
         msg['From'] = sender
         msg['To'] = to_email
-        msg['X-Mailer'] = 'WeBuyAnyVehicle UK'
+        msg['X-Mailer'] = 'webuyanyvehicle UK'
 
         with smtplib.SMTP(server, port) as s:
             s.starttls()
@@ -567,7 +567,7 @@ def admin_required(f):
 def inject_globals():
     return {
         'csrf_token': request.cookies.get('csrf_token', ''),
-        'company_name': os.environ.get('COMPANY_NAME', 'WeBuyAnyVehicle UK'),
+        'company_name': os.environ.get('COMPANY_NAME', 'webuyanyvehicle UK'),
         'company_phone': os.environ.get('COMPANY_PHONE', '0800 123 4567'),
         'company_email': os.environ.get('COMPANY_EMAIL', 'quotes@webuyanyvehicle.co.uk'),
         'company_address': os.environ.get('COMPANY_ADDRESS', 'Birmingham, UK'),
