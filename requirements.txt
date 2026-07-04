@@ -16,6 +16,6 @@ requests==2.31.0
 gunicorn==23.0.0
 flask-limiter==3.7.0
 redis==5.1.1
-vercel==0.5.9
-qstash==2.1.0
+vercel
+qstash
 sentry-sdk==2.13.0
