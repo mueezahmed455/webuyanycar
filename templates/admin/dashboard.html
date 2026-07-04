@@ -3,11 +3,12 @@
 {% block body_class %}admin-body{% endblock %}
 
 {% block content %}
+{% import '_components.html' as comp %}
 <div class="admin-dashboard">
-    <aside class="admin-sidebar">
-        <a href="{{ url_for('admin_dashboard') }}" class="logo" style="justify-content: center;">
-            <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="" width="32" height="32">
-            <span style="font-size: 1.1rem;">Admin</span>
+    <aside class="admin-sidebar" id="adminSidebar">
+        <a href="{{ url_for('admin_dashboard') }}" class="logo admin-sidebar-logo" aria-label="webuyanyvehicle Admin">
+            {{ comp.logo_icon(size='sm', variant='default') }}
+            <span class="admin-sidebar-label">Admin</span>
         </a>
         <ul class="admin-nav">
             <li><a href="{{ url_for('admin_dashboard') }}" class="active"><i class="fas fa-chart-pie"></i> Dashboard</a></li>
@@ -20,9 +21,11 @@
     <main class="admin-main">
         <div class="admin-header">
             <h1>Dashboard</h1>
-            <a href="{{ url_for('admin_logout') }}" class="btn btn-dark" style="padding: 10px 20px; font-size: 0.9rem;">
-                <i class="fas fa-sign-out-alt"></i> Logout
-            </a>
+            <div class="admin-header-actions">
+                <a href="{{ url_for('admin_logout') }}" class="btn btn-dark admin-logout-btn">
+                    <i class="fas fa-sign-out-alt"></i><span>Logout</span>
+                </a>
+            </div>
         </div>
 
         <div class="stats-grid">
@@ -67,7 +70,7 @@
                         <td>£{{ "{:,.2f}".format(quote.valuation_amount) }}</td>
                         <td><span class="status-badge status-{{ quote.status }}">{{ quote.status }}</span></td>
                         <td>{{ quote.created_at.strftime('%d/%m/%Y %H:%M') if quote.created_at else 'N/A' }}</td>
-                        <td><a href="{{ url_for('admin_quote_detail', quote_id=quote.id) }}" style="color: var(--gold-dark); font-weight: 700;">View</a></td>
+                        <td><a href="{{ url_for('admin_quote_detail', quote_id=quote.id) }}" class="admin-view-link">View</a></td>
                     </tr>
                     {% else %}
                     <tr>

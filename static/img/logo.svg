@@ -1,37 +1,69 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 56" width="280" height="56">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 56" width="280" height="56" role="img" aria-label="webuyanyvehicle UK - Licensed Motor Trader">
   <defs>
-    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" style="stop-color:#c9a227"/>
-      <stop offset="100%" style="stop-color:#e0c04d"/>
+    <linearGradient id="gold-horiz" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#c9a227"/>
+      <stop offset="50%" stop-color="#e8c652"/>
+      <stop offset="100%" stop-color="#c9a227"/>
+    </linearGradient>
+    <linearGradient id="gold-radial" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" stop-color="#f0d375"/>
+      <stop offset="100%" stop-color="#b8901f"/>
+    </linearGradient>
+    <linearGradient id="navy-radial" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" stop-color="#1a2d4a"/>
+      <stop offset="100%" stop-color="#050d1a"/>
     </linearGradient>
   </defs>
 
-  <!-- Icon: stylised speed/road mark -->
-  <g transform="translate(4,4)">
-    <!-- Outer ring -->
-    <circle cx="22" cy="22" r="21" fill="none" stroke="#0a1628" stroke-width="2.5"/>
-    <!-- Inner accent ring -->
-    <circle cx="22" cy="22" r="15" fill="none" stroke="url(#g)" stroke-width="2" stroke-dasharray="6 3"/>
-    <!-- Speed arrow -->
-    <polygon points="22,6 29,22 22,18 15,22" fill="url(#g)"/>
-    <!-- Road line -->
-    <line x1="8" y1="30" x2="36" y2="30" stroke="#0a1628" stroke-width="2.5" stroke-linecap="round"/>
-    <!-- Car silhouette dots -->
-    <circle cx="14" cy="36" r="3.5" fill="#0a1628"/>
-    <circle cx="30" cy="36" r="3.5" fill="#0a1628"/>
-    <circle cx="14" cy="36" r="1.2" fill="url(#g)"/>
-    <circle cx="30" cy="36" r="1.2" fill="url(#g)"/>
+  <!-- ICON: refined speedometer gauge with car silhouette -->
+  <g transform="translate(0,0)">
+    <!-- Outer dark disc -->
+    <circle cx="28" cy="28" r="26" fill="url(#navy-radial)"/>
+    <!-- Outer gold bezel -->
+    <circle cx="28" cy="28" r="24" fill="none" stroke="url(#gold-horiz)" stroke-width="1.5"/>
+    <!-- Inner accent dashed ring -->
+    <circle cx="28" cy="28" r="19" fill="none" stroke="url(#gold-horiz)" stroke-width="1.2" stroke-dasharray="3 2" opacity="0.75"/>
+    <!-- Tick marks around the dial -->
+    <g stroke="url(#gold-horiz)" stroke-width="1.2" stroke-linecap="round" opacity="0.9">
+      <line x1="28" y1="9"   x2="28" y2="13"/>
+      <line x1="44" y1="14"  x2="41" y2="16.5"/>
+      <line x1="47" y1="28"  x2="43" y2="28"/>
+      <line x1="44" y1="42"  x2="41" y2="39.5"/>
+      <line x1="28" y1="47"  x2="28" y2="43"/>
+      <line x1="12" y1="42"  x2="15" y2="39.5"/>
+      <line x1="9"  y1="28"  x2="13" y2="28"/>
+      <line x1="12" y1="14"  x2="15" y2="16.5"/>
+    </g>
+    <!-- Speedometer needle (pivots on hover via CSS class) -->
+    <g class="logo-needle" transform="rotate(-22 28 28)">
+      <path d="M28 12 L30.5 28 L25.5 28 Z" fill="url(#gold-radial)"/>
+      <circle cx="28" cy="28" r="2.5" fill="#0a1628" stroke="url(#gold-horiz)" stroke-width="1"/>
+    </g>
+    <!-- Car silhouette (front 3/4 view) -->
+    <g transform="translate(14,32)">
+      <path d="M0 7 L3 4 L11 3 L19 3 L21 4 L24 7 L24 9 L0 9 Z" fill="#0a1628"/>
+      <line x1="3.5" y1="5" x2="20.5" y2="5" stroke="url(#gold-horiz)" stroke-width="0.6"/>
+      <line x1="6" y1="3.7" x2="10" y2="3.7" stroke="url(#gold-horiz)" stroke-width="0.5"/>
+      <line x1="14" y1="3.7" x2="18" y2="3.7" stroke="url(#gold-horiz)" stroke-width="0.5"/>
+      <!-- Wheels -->
+      <circle cx="6.5" cy="9.5" r="2.8" fill="#0a1628" stroke="url(#gold-horiz)" stroke-width="0.9"/>
+      <circle cx="17.5" cy="9.5" r="2.8" fill="#0a1628" stroke="url(#gold-horiz)" stroke-width="0.9"/>
+      <circle cx="6.5" cy="9.5" r="1" fill="url(#gold-horiz)"/>
+      <circle cx="17.5" cy="9.5" r="1" fill="url(#gold-horiz)"/>
+    </g>
   </g>
 
-  <!-- Wordmark -->
-  <text x="58" y="24" font-family="'Inter',Arial,Helvetica,sans-serif" font-weight="900" font-size="18" fill="#0a1628" letter-spacing="-0.3">webuy</text>
-  <text x="115" y="24" font-family="'Inter',Arial,Helvetica,sans-serif" font-weight="900" font-size="18" fill="url(#g)" letter-spacing="-0.3">any</text>
-  <text x="153" y="24" font-family="'Inter',Arial,Helvetica,sans-serif" font-weight="900" font-size="18" fill="#0a1628" letter-spacing="-0.3">vehicle</text>
+  <!-- WORDMARK -->
+  <text x="64" y="24" font-family="'Inter','Segoe UI',Arial,sans-serif" font-weight="900" font-size="18" fill="#0a1628" letter-spacing="-0.4">webuy</text>
+  <text x="116" y="24" font-family="'Inter','Segoe UI',Arial,sans-serif" font-weight="900" font-size="18" fill="url(#gold-horiz)" letter-spacing="-0.4">any</text>
+  <text x="151" y="24" font-family="'Inter','Segoe UI',Arial,sans-serif" font-weight="900" font-size="18" fill="#0a1628" letter-spacing="-0.4">vehicle</text>
 
-  <!-- UK badge -->
-  <rect x="228" y="9" width="32" height="16" rx="4" fill="url(#g)"/>
-  <text x="244" y="21" font-family="'Inter',Arial,Helvetica,sans-serif" font-weight="800" font-size="9" fill="#0a1628" text-anchor="middle" letter-spacing="1">UK</text>
+  <!-- UK pill -->
+  <g>
+    <rect x="220" y="9" width="36" height="14" rx="3" fill="url(#gold-horiz)"/>
+    <text x="238" y="19.5" font-family="'Inter','Segoe UI',Arial,sans-serif" font-weight="900" font-size="9" fill="#0a1628" text-anchor="middle" letter-spacing="1.2">UK</text>
+  </g>
 
   <!-- Tagline -->
-  <text x="58" y="46" font-family="'Inter',Arial,Helvetica,sans-serif" font-weight="700" font-size="7.5" fill="#4a5568" letter-spacing="1.2">LICENSED MOTOR TRADER</text>
+  <text x="64" y="44" font-family="'Inter','Segoe UI',Arial,sans-serif" font-weight="700" font-size="7.5" fill="#4a5568" letter-spacing="1.5">LICENSED MOTOR TRADER · SINCE 2018</text>
 </svg>

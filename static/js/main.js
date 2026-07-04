@@ -11,68 +11,140 @@ document.addEventListener('DOMContentLoaded', function() {
     const scrollProgress = document.getElementById('scrollProgress');
     const backToTop = document.getElementById('backToTop');
 
-    // ─── SCROLL PROGRESS BAR ────────────────────────
-    if (scrollProgress) {
-        window.addEventListener('scroll', function() {
-            const scrollTop = window.scrollY;
-            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-            const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-            scrollProgress.style.width = Math.min(100, Math.max(0, progress)) + '%';
-        }, { passive: true });
-    }
+    // ─── UNIFIED SCROLL HANDLER ─────────────────────
+    // Every per-scroll concern (progress bar, navbar state, back-to-top
+    // visibility + arc, mobile sticky CTA, navbar hide-on-scroll) is
+    // batched into ONE rAF-coalesced update. This is critical on mobile —
+    // six separate scroll listeners each fire on every touchmove and were
+    // overwhelming the GPU with redundant DOM writes. Now we read scrollY
+    // once per frame and write once per frame.
+    const NAV_SCROLL_HIDE_THRESHOLD = 200;
+    const BACK_TO_TOP_THRESHOLD = 500;
+    const MOBILE_CTA_FOLD_FACTOR = 0.6;
+    const MOBILE_CTA_FOOTER_FADE_PX = 60;
+    const MOBILE_BREAKPOINT_PX = 768;
+    const ARC_CIRCUMFERENCE = 2 * Math.PI * 24; // ~150.8
 
-    // ─── BACK TO TOP ────────────────────────────────
-    if (backToTop) {
-        window.addEventListener('scroll', function() {
-            if (window.scrollY > 500) {
-                backToTop.classList.add('visible');
-            } else {
-                backToTop.classList.remove('visible');
+    const mobileBottomCtaEl = document.getElementById('mobileBottomCta');
+    const backToTopArcEl = document.getElementById('backToTopArc');
+
+    // Cache matchMedia matchers once; re-evaluate only on resize.
+    const mobileMatcher = window.matchMedia('(max-width: ' + (MOBILE_BREAKPOINT_PX - 1) + 'px)');
+
+    let scrollRafPending = false;
+    let lastScrollY = 0;
+    let lastNavbarTransformY = null;  // canonical sentinel: null = "not yet set"
+    let mobileCtaShown = false;
+    let navbarTypeTimer = null;
+
+    function applyUnifiedScroll() {
+        scrollRafPending = false;
+
+        const scrollY = window.scrollY;
+        if (scrollY === lastScrollY) {
+            return;
+        }
+        const isDown = scrollY > lastScrollY;
+        const viewportH = window.innerHeight;
+        const docHeight = document.documentElement.scrollHeight;
+        const scrollable = docHeight - viewportH;
+        const ratio = scrollable > 0 ? Math.min(1, Math.max(0, scrollY / scrollable)) : 0;
+        const isMobile = mobileMatcher.matches;
+
+        // 1) Scroll progress bar (cheap CSS width %)
+        if (scrollProgress) {
+            scrollProgress.style.width = (ratio * 100).toFixed(2) + '%';
+        }
+
+        // 2) Navbar scrolled state (single class toggle, batched)
+        if (navbar) {
+            navbar.classList.toggle('scrolled', scrollY > 50);
+
+            // 3) Navbar hide-on-scroll-down only on mobile + once past hero
+            const nextTransformY =
+                isMobile && isDown && scrollY > NAV_SCROLL_HIDE_THRESHOLD
+                    ? '-100%'
+                    : '0%';
+            if (nextTransformY !== lastNavbarTransformY) {
+                navbar.style.transform = 'translateY(' + nextTransformY + ')';
+                lastNavbarTransformY = nextTransformY;
             }
-        }, { passive: true });
-
-        backToTop.addEventListener('click', function() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-    }
-
-    // ─── NAVBAR SCROLL DIRECTION HIDE/SHOW ──────────
-    if (navbar) {
-        let lastScroll = 0;
-        let scrollTimeout;
-
-        window.addEventListener('scroll', function() {
-            const currentScroll = window.scrollY;
-
-            // Add scrolled class for shadow
-            if (currentScroll > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
-
-            // Hide on scroll down, show on scroll up (only on mobile)
-            if (window.innerWidth <= 768) {
-                if (currentScroll > lastScroll && currentScroll > 200) {
-                    navbar.style.transform = 'translateY(-100%)';
-                } else {
-                    navbar.style.transform = 'translateY(0)';
-                }
-
-                clearTimeout(scrollTimeout);
-                scrollTimeout = setTimeout(function() {
-                    navbar.style.transform = 'translateY(0)';
+            if (isMobile) {
+                if (navbarTypeTimer) clearTimeout(navbarTypeTimer);
+                navbarTypeTimer = setTimeout(function() {
+                    navbar.style.transform = 'translateY(0%)';
+                    lastNavbarTransformY = '0%';
                 }, 2000);
             }
+        }
 
-            lastScroll = currentScroll;
-        }, { passive: true });
+        // 4) Back-to-top visibility toggle + arc progress (single DOM write)
+        if (backToTop) {
+            backToTop.classList.toggle('visible', scrollY > BACK_TO_TOP_THRESHOLD);
+        }
+        if (backToTopArcEl) {
+            backToTopArcEl.style.strokeDashoffset = (ARC_CIRCUMFERENCE * (1 - ratio)).toFixed(2);
+        }
 
-        // Reset navbar transform when resizing above mobile breakpoint
-        window.addEventListener('resize', function() {
-            if (window.innerWidth > 768) {
-                navbar.style.transform = '';
+        // 5) Mobile sticky bottom CTA — only update when state flips
+        if (mobileBottomCtaEl) {
+            if (!isMobile) {
+                if (mobileCtaShown) {
+                    mobileBottomCtaEl.classList.remove('is-visible');
+                    document.body.classList.remove('has-mbcta');
+                    mobileCtaShown = false;
+                }
+            } else {
+                const heroPx = viewportH * MOBILE_CTA_FOLD_FACTOR;
+                const nearBottom = scrollY + viewportH >= docHeight - MOBILE_CTA_FOOTER_FADE_PX;
+                const shouldShow = scrollY > heroPx && !nearBottom;
+                if (shouldShow !== mobileCtaShown) {
+                    mobileCtaShown = shouldShow;
+                    mobileBottomCtaEl.classList.toggle('is-visible', shouldShow);
+                    document.body.classList.toggle('has-mbcta', shouldShow);
+                }
             }
+        }
+
+        lastScrollY = scrollY;
+        // Run the (optional) parallax pass after the unified state has been
+        // updated. Skipped entirely on mobile / touch / reduced-motion.
+        onScrollTickExcludeParallax();
+    }
+
+    // Hook for the (optional) parallax pass. Declared as `let` so the
+    // desktop-only branch below can safely override it. (Reassigning a
+    // `function` declaration is a TypeError in strict mode.)
+    let onScrollTickExcludeParallax = function() { /* no-op default */ };
+
+    function scheduleScrollUpdate() {
+        if (scrollRafPending) return;
+        scrollRafPending = true;
+        requestAnimationFrame(applyUnifiedScroll);
+    }
+
+    // Single scroll listener — coalesces ALL per-frame work to one rAF.
+    window.addEventListener('scroll', scheduleScrollUpdate, { passive: true });
+    // Initial pass so progress bar / CTA start in correct state.
+    scheduleScrollUpdate();
+
+    // Resize: re-evaluate on width changes; do NOT touch transforms cheaply.
+    let resizeRaf = null;
+    window.addEventListener('resize', function() {
+        if (resizeRaf) cancelAnimationFrame(resizeRaf);
+        resizeRaf = requestAnimationFrame(function() {
+            if (navbar && window.innerWidth > MOBILE_BREAKPOINT_PX) {
+                navbar.style.transform = '';
+                lastNavbarTransformY = null;
+            }
+            scheduleScrollUpdate();
+        });
+    }, { passive: true });
+
+    // Back-to-top click (kept cheap — smoothScroll triggers rAF).
+    if (backToTop) {
+        backToTop.addEventListener('click', function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     }
 
@@ -282,30 +354,34 @@ document.addEventListener('DOMContentLoaded', function() {
         requestAnimationFrame(update);
     }
 
-    // ─── PARALLAX SCROLL EFFECT ────────────────────
-    if ('IntersectionObserver' in window) {
-        const parallaxObserver = new IntersectionObserver(function(entries) {
-            entries.forEach(function(entry) {
-                const el = entry.target;
-                if (entry.isIntersecting) {
-                    el.classList.add('parallax-active');
-                    parallaxObserver.unobserve(el);
+    // ─── PARALLAX — SUBSCRIBED INTO THE UNIFIED SCROLL TICK ──────────
+    // The previous version ran querySelectorAll + getBoundingClientRect on
+    // every scroll event across the whole page, which is one of the biggest
+    // contributors to scroll jank on mid-range phones. We now:
+    //  - On desktop + hover-capable + not reduced-motion: opt in. The list
+    //    is cached ONCE and the scroll sample lives inside the already-running
+    //    rAF loop (no second scroll listener).
+    //  - On mobile / coarse-pointer / reduced-motion: parallax is disabled
+    //    entirely — it doesn't add enough value to justify per-frame layout
+    //    reads on weaker hardware.
+    const parallaxTargets = Array.from(document.querySelectorAll('.parallax-subtle'));
+    if (parallaxTargets.length) {
+        const allowParallax = window.matchMedia('(min-width: 769px) and (hover: hover)').matches
+            && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (allowParallax) {
+            // Replace the no-op default with the actual parallax pass.
+            // Safe to reassign because onScrollTickExcludeParallax is `let`.
+            onScrollTickExcludeParallax = function() {
+                const viewportH = window.innerHeight;
+                for (let i = 0; i < parallaxTargets.length; i++) {
+                    const el = parallaxTargets[i];
+                    const speed = parseFloat(el.dataset.speed || '0.03');
+                    const rect = el.getBoundingClientRect();
+                    if (rect.bottom < -200 || rect.top > viewportH + 200) continue;
+                    el.style.transform = 'translate3d(0, ' + (rect.top * speed).toFixed(2) + 'px, 0)';
                 }
-            });
-        }, { threshold: 0 });
-
-        window.addEventListener('scroll', function() {
-            document.querySelectorAll('.parallax-subtle.parallax-active').forEach(function(el) {
-                const speed = parseFloat(el.getAttribute('data-speed') || '0.03');
-                const rect = el.getBoundingClientRect();
-                const scrolled = rect.top / window.innerHeight;
-                el.style.transform = 'translateY(' + (scrolled * speed * 100) + 'px)';
-            });
-        }, { passive: true });
-
-        document.querySelectorAll('.parallax-subtle').forEach(function(el) {
-            parallaxObserver.observe(el);
-        });
+            };
+        }
     }
 
     // ─── FILE UPLOAD FEEDBACK ───────────────────────
@@ -450,17 +526,130 @@ document.addEventListener('DOMContentLoaded', function() {
     if (adminToggle && adminSidebar) {
         const adminOverlay = document.createElement('div');
         adminOverlay.className = 'mobile-backdrop';
-        adminSidebar.parentNode.insertBefore(adminOverlay, adminSidebar.nextSibling);
+        // Insert next to sidebar (or before it if it's a direct child of body)
+        if (adminSidebar.parentNode) {
+            adminSidebar.parentNode.insertBefore(adminOverlay, adminSidebar.nextSibling);
+        }
 
-        adminToggle.addEventListener('click', function() {
-            adminSidebar.classList.toggle('open');
-            adminOverlay.classList.toggle('active');
-        });
-
-        adminOverlay.addEventListener('click', function() {
+        function closeAdminDrawer() {
             adminSidebar.classList.remove('open');
             adminOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+            const icon = adminToggle.querySelector('i');
+            if (icon) {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        }
+        function openAdminDrawer() {
+            adminSidebar.classList.add('open');
+            adminOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            const icon = adminToggle.querySelector('i');
+            if (icon) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            }
+        }
+
+        adminToggle.addEventListener('click', function() {
+            if (adminSidebar.classList.contains('open')) {
+                closeAdminDrawer();
+            } else {
+                openAdminDrawer();
+            }
         });
+
+        adminOverlay.addEventListener('click', closeAdminDrawer);
+
+        // Swipe-to-close on admin drawer
+        let atStartX = 0;
+        adminSidebar.addEventListener('touchstart', function(e) {
+            atStartX = e.touches[0].clientX;
+        }, { passive: true });
+        adminSidebar.addEventListener('touchend', function(e) {
+            const endX = e.changedTouches[0].clientX;
+            if (endX - atStartX < -50) closeAdminDrawer();
+        }, { passive: true });
+
+        // Close drawer on Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && adminSidebar.classList.contains('open')) {
+                closeAdminDrawer();
+            }
+        });
+    }
+
+    // ─── PROMO BAR DISMISS ──────────────────────────
+    const promoBar = document.getElementById('promoBar');
+    const promoClose = document.getElementById('promoClose');
+    const PROMO_KEY = 'wbav_promo_dismissed';
+
+    if (promoBar) {
+        try {
+            // Hide if already dismissed in this session
+            if (sessionStorage.getItem(PROMO_KEY) === '1') {
+                promoBar.classList.add('is-dismissed');
+                promoBar.style.display = 'none';
+            }
+        } catch (e) {
+            // Ignore sessionStorage unavailable (Safari private mode)
+        }
+
+        if (promoClose) {
+            promoClose.addEventListener('click', function() {
+                promoBar.classList.add('is-dismissed');
+                try { sessionStorage.setItem(PROMO_KEY, '1'); } catch (e) { /* noop */ }
+                setTimeout(function() { promoBar.style.display = 'none'; }, 400);
+            });
+        }
+    }
+
+    // ─── MOBILE STICKY BOTTOM CTA ───────────────────
+    const mobileBottomCta = document.getElementById('mobileBottomCta');
+    if (mobileBottomCta) {
+        // Reveal after scrolling past the hero (~80% of viewport height)
+        // Hide near the bottom (where footer is) so it doesn't overlap last content.
+        // Also toggles `has-mbcta` on <body> so global padding-bottom only kicks
+        // in when the bar is actually showing (avoids empty gap on short pages).
+        let lastCtaVisible = false;
+        function updateMobileCta() {
+            if (!mobileBottomCta) return;
+            if (window.innerWidth > 768) {
+                if (mobileBottomCta.classList.contains('is-visible')) {
+                    mobileBottomCta.classList.remove('is-visible');
+                    document.body.classList.remove('has-mbcta');
+                }
+                return;
+            }
+            const scrollY = window.scrollY;
+            const viewportH = window.innerHeight;
+            const heroHeight = viewportH * 0.6;
+            const totalH = document.documentElement.scrollHeight;
+            const nearBottom = scrollY + viewportH >= totalH - 60;
+            const shouldShow = scrollY > heroHeight && !nearBottom;
+            if (shouldShow !== lastCtaVisible) {
+                lastCtaVisible = shouldShow;
+                mobileBottomCta.classList.toggle('is-visible', shouldShow);
+                document.body.classList.toggle('has-mbcta', shouldShow);
+            }
+        }
+        window.addEventListener('scroll', updateMobileCta, { passive: true });
+        window.addEventListener('resize', updateMobileCta, { passive: true });
+        updateMobileCta();
+    }
+
+    // ─── BACK TO TOP — PROGRESS ARC ─────────────────
+    const backToTopArc = document.getElementById('backToTopArc');
+    if (backToTopArc && backToTop) {
+        // Update the arc on every scroll (smooth, on top of existing visibility toggle)
+        window.addEventListener('scroll', function() {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = docHeight > 0 ? Math.min(1, scrollTop / docHeight) : 0;
+            const circumference = 2 * Math.PI * 24; // ~150.8
+            backToTopArc.style.strokeDashoffset = circumference * (1 - progress);
+        }, { passive: true });
     }
 });
 

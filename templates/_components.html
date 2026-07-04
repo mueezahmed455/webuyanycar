@@ -1,0 +1,139 @@
+{# ============================================================
+   Shared UI component macros for webuyanyvehicle UK
+   ------------------------------------------------------------
+   - logo_mark: inline scalable SVG logo that animates on hover
+   Sizes:    xs (icon only), sm (compact), md (default), lg (hero/footer)
+   Variants: default (navy on cream), light (white on navy), muted
+   ============================================================ #}
+
+{% macro logo_mark(size='md', variant='default') %}
+<div class="logo-mark logo-mark--{{ size }} logo-mark--{{ variant }}">
+  <svg class="logo-svg" viewBox="0 0 280 56" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMid meet">
+    <defs>
+      <linearGradient id="lg-gold-h-{{ size }}-{{ variant }}" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%"  stop-color="#b8901f"/>
+        <stop offset="50%" stop-color="#e8c652"/>
+        <stop offset="100%" stop-color="#b8901f"/>
+      </linearGradient>
+      <linearGradient id="lg-gold-v-{{ size }}-{{ variant }}" x1="50%" y1="0%" x2="50%" y2="100%">
+        <stop offset="0%"   stop-color="#f0d375"/>
+        <stop offset="100%" stop-color="#b8901f"/>
+      </linearGradient>
+      <linearGradient id="lg-navy-{{ size }}-{{ variant }}" x1="50%" y1="0%" x2="50%" y2="100%">
+        <stop offset="0%"   stop-color="#1a2d4a"/>
+        <stop offset="100%" stop-color="#050d1a"/>
+      </linearGradient>
+    </defs>
+
+    {# — ICON (0,0 to 56,56) — premium speedometer + car silhouette #}
+    <g class="lm-icon">
+      {# outer dark disc #}
+      <circle class="lm-disc-bg"    cx="28" cy="28" r="26" fill="url(#lg-navy-{{ size }}-{{ variant }})"/>
+      {# gold bezel #}
+      <circle class="lm-disc-bezel" cx="28" cy="28" r="24" fill="none" stroke="url(#lg-gold-h-{{ size }}-{{ variant }})" stroke-width="1.5"/>
+      {# dashed accent ring #}
+      <circle cx="28" cy="28" r="19" fill="none" stroke="url(#lg-gold-h-{{ size }}-{{ variant }})" stroke-width="1.2" stroke-dasharray="3 2" opacity="0.75"/>
+      {# tick marks at cardinal + corners #}
+      <g class="lm-ticks" stroke="url(#lg-gold-h-{{ size }}-{{ variant }})" stroke-width="1.2" stroke-linecap="round">
+        <line x1="28" y1="9"   x2="28" y2="13"/>
+        <line x1="44" y1="14"  x2="41" y2="16.5"/>
+        <line x1="47" y1="28"  x2="43" y2="28"/>
+        <line x1="44" y1="42"  x2="41" y2="39.5"/>
+        <line x1="28" y1="47"  x2="28" y2="43"/>
+        <line x1="12" y1="42"  x2="15" y2="39.5"/>
+        <line x1="9"  y1="28"  x2="13" y2="28"/>
+        <line x1="12" y1="14"  x2="15" y2="16.5"/>
+      </g>
+      {# speedometer needle — wrapped in a pivot group at (28,28) so CSS
+         rotation always pivots around the dial centre, regardless of
+         transform-box / transform-origin support (iOS Safari < 16 was buggy). #}
+      <g transform="translate(28 28)">
+        <g class="lm-needle">
+          <path d="M0 -16 L2.5 0 L-2.5 0 Z" fill="url(#lg-gold-v-{{ size }}-{{ variant }})"/>
+          <circle cx="0" cy="0" r="2.5" class="lm-needle-pivot"/>
+        </g>
+      </g>
+      {# car silhouette on the road #}
+      <g class="lm-car">
+        <g transform="translate(14,32)">
+          <path d="M0 7 L3 4 L11 3 L19 3 L21 4 L24 7 L24 9 L0 9 Z" class="lm-car-body"/>
+          <line x1="3.5" y1="5" x2="20.5" y2="5" class="lm-car-line"/>
+          <line x1="6" y1="3.7" x2="10" y2="3.7" class="lm-car-line"/>
+          <line x1="14" y1="3.7" x2="18" y2="3.7" class="lm-car-line"/>
+          <circle class="lm-wheel"  cx="6.5"  cy="9.5" r="2.8"/>
+          <circle class="lm-wheel"  cx="17.5" cy="9.5" r="2.8"/>
+          <circle class="lm-hub"    cx="6.5"  cy="9.5" r="1"/>
+          <circle class="lm-hub"    cx="17.5" cy="9.5" r="1"/>
+        </g>
+      </g>
+    </g>
+
+    {# — WORDMARK (x = 64..220+) — #}
+    <g class="lm-wordmark" font-family="'Inter', 'Segoe UI', Arial, sans-serif" font-weight="900">
+      <text x="64"  y="24" font-size="18" class="lm-text lm-text-primary" letter-spacing="-0.4">webuy</text>
+      <text x="116" y="24" font-size="18" class="lm-text lm-text-accent"  letter-spacing="-0.4">any</text>
+      <text x="151" y="24" font-size="18" class="lm-text lm-text-primary" letter-spacing="-0.4">vehicle</text>
+    </g>
+
+    {# — UK pill badge — #}
+    <g class="lm-pill">
+      <rect x="220" y="9" width="36" height="14" rx="3" class="lm-pill-bg"/>
+      <text x="238" y="19.5" font-family="'Inter', 'Segoe UI', Arial, sans-serif" font-weight="900" font-size="9" class="lm-pill-text" text-anchor="middle" letter-spacing="1.2">UK</text>
+    </g>
+
+    {# — TAGLINE (hidden below md size, kept for retina displays via CSS) — #}
+    <text class="lm-tagline" x="64" y="43" font-family="'Inter', 'Segoe UI', Arial, sans-serif" font-weight="700" font-size="7" letter-spacing="1.5">LICENSED MOTOR TRADER · INSTANT VALUATION</text>
+  </svg>
+</div>
+{% endmacro %}
+
+{# Compact icon-only version for admin sidebar / favicon-style placements #}
+{% macro logo_icon(size='sm', variant='default') %}
+<div class="logo-icon logo-icon--{{ size }} logo-icon--{{ variant }}">
+  <svg viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+    <defs>
+      <linearGradient id="lg-ic-gold-{{ size }}-{{ variant }}" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%"  stop-color="#b8901f"/>
+        <stop offset="50%" stop-color="#e8c652"/>
+        <stop offset="100%" stop-color="#b8901f"/>
+      </linearGradient>
+      <linearGradient id="lg-ic-goldv-{{ size }}-{{ variant }}" x1="50%" y1="0%" x2="50%" y2="100%">
+        <stop offset="0%"   stop-color="#f0d375"/>
+        <stop offset="100%" stop-color="#b8901f"/>
+      </linearGradient>
+      <linearGradient id="lg-ic-navy-{{ size }}-{{ variant }}" x1="50%" y1="0%" x2="50%" y2="100%">
+        <stop offset="0%"   stop-color="#1a2d4a"/>
+        <stop offset="100%" stop-color="#050d1a"/>
+      </linearGradient>
+    </defs>
+    <circle cx="28" cy="28" r="26" fill="url(#lg-ic-navy-{{ size }}-{{ variant }})"/>
+    <circle cx="28" cy="28" r="24" fill="none" stroke="url(#lg-ic-gold-{{ size }}-{{ variant }})" stroke-width="1.5"/>
+    <circle cx="28" cy="28" r="19" fill="none" stroke="url(#lg-ic-gold-{{ size }}-{{ variant }})" stroke-width="1.2" stroke-dasharray="3 2" opacity="0.75"/>
+    <g stroke="url(#lg-ic-gold-{{ size }}-{{ variant }})" stroke-width="1.2" stroke-linecap="round">
+      <line x1="28" y1="9"   x2="28" y2="13"/>
+      <line x1="44" y1="14"  x2="41" y2="16.5"/>
+      <line x1="47" y1="28"  x2="43" y2="28"/>
+      <line x1="44" y1="42"  x2="41" y2="39.5"/>
+      <line x1="28" y1="47"  x2="28" y2="43"/>
+      <line x1="12" y1="42"  x2="15" y2="39.5"/>
+      <line x1="9"  y1="28"  x2="13" y2="28"/>
+      <line x1="12" y1="14"  x2="15" y2="16.5"/>
+    </g>
+    <g transform="translate(28 28)">
+      <g class="lm-needle">
+        <path d="M0 -16 L2.5 0 L-2.5 0 Z" fill="url(#lg-ic-goldv-{{ size }}-{{ variant }})"/>
+        <circle cx="0" cy="0" r="2.5" class="lm-needle-pivot"/>
+      </g>
+    </g>
+    <g class="lm-car">
+      <g transform="translate(14,32)">
+        <path d="M0 7 L3 4 L11 3 L19 3 L21 4 L24 7 L24 9 L0 9 Z" class="lm-car-body"/>
+        <circle class="lm-wheel" cx="6.5" cy="9.5" r="2.8"/>
+        <circle class="lm-wheel" cx="17.5" cy="9.5" r="2.8"/>
+        <circle class="lm-hub" cx="6.5" cy="9.5" r="1"/>
+        <circle class="lm-hub" cx="17.5" cy="9.5" r="1"/>
+      </g>
+    </g>
+  </svg>
+</div>
+{% endmacro %}

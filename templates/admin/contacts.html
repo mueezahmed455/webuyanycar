@@ -3,11 +3,12 @@
 {% block body_class %}admin-body{% endblock %}
 
 {% block content %}
+{% import '_components.html' as comp %}
 <div class="admin-dashboard">
-    <aside class="admin-sidebar">
-        <a href="{{ url_for('admin_dashboard') }}" class="logo" style="justify-content: center;">
-            <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="" width="32" height="32">
-            <span style="font-size: 1.1rem;">Admin</span>
+    <aside class="admin-sidebar" id="adminSidebar">
+        <a href="{{ url_for('admin_dashboard') }}" class="logo admin-sidebar-logo" aria-label="webuyanyvehicle Admin">
+            {{ comp.logo_icon(size='sm', variant='default') }}
+            <span class="admin-sidebar-label">Admin</span>
         </a>
         <ul class="admin-nav">
             <li><a href="{{ url_for('admin_dashboard') }}"><i class="fas fa-chart-pie"></i> Dashboard</a></li>

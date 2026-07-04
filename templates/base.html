@@ -2,7 +2,7 @@
 <html lang="en-GB">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>{% block title %}WeBuyAnyVehicle UK — Sell Any Car Instantly{% endblock %}</title>
     <meta name="description" content="{% block description %}We buy any car in any condition. Instant valuation, instant payment, free collection across the UK. Get your free quote in 60 seconds.{% endblock %}">
@@ -26,7 +26,7 @@
     <meta name="twitter:title" content="WeBuyAnyVehicle UK — Sell Any Car Instantly">
     <meta name="twitter:description" content="We buy any car in any condition. Instant valuation, instant payment, free collection across the UK.">
 
-    <!-- Favicon -->
+    <!-- Favicon (uses the icon portion of the same brand mark) -->
     <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='img/favicon.svg') }}">
     <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='img/favicon.svg') }}">
     <meta name="theme-color" content="#0a1628">
@@ -73,6 +73,8 @@
 </head>
 <body class="{% block body_class %}{% endblock %}">
 
+    {% import '_components.html' as comp %}
+
     <!-- Scroll Progress Bar -->
     <div class="scroll-progress" id="scrollProgress"></div>
 
@@ -89,23 +91,62 @@
         {% endif %}
     {% endwith %}
 
+    {# ──────────────────────────────────────────────
+       DISMISSIBLE PROMO / ANNOUNCEMENT BAR
+       Sits above the navbar, shows once per session
+       ─────────────────────────────────────────────── #}
+    {% if not request.endpoint in ['admin_dashboard', 'admin_quotes', 'admin_contacts', 'admin_quote_detail', 'admin_login', 'quote_success'] %}
+    <div class="promo-bar" id="promoBar">
+        <div class="promo-bar-inner">
+            <span class="promo-bar-icon"><i class="fas fa-bolt"></i></span>
+            <span class="promo-bar-text">
+                <strong>£50 Bonus</strong> paid on any car sold this week.
+                <a href="{{ url_for('quote') }}">Get your free valuation &rarr;</a>
+            </span>
+            <button class="promo-bar-close" id="promoClose" aria-label="Dismiss announcement">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+    {% endif %}
+
     <!-- Navigation -->
     <nav class="navbar" id="navbar">
         <div class="nav-container">
-            <a href="{{ url_for('index') }}" class="logo">
-                <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="webuyanyvehicle UK" width="48" height="48">
-                <span>webuyanyvehicle</span>
+            <a href="{{ url_for('index') }}" class="logo" aria-label="webuyanyvehicle UK — Home">
+                {{ comp.logo_mark(size='md', variant='default') }}
             </a>
 
+            {% if request.endpoint and request.endpoint.startswith('admin_') %}
+            <button class="admin-toggle" id="adminToggle" aria-label="Toggle admin menu">
+                <i class="fas fa-bars"></i><span>Menu</span>
+            </button>
+            {% endif %}
+
             <ul class="nav-links" id="navLinks">
-                <li><a href="{{ url_for('how_it_works') }}" class="{% if request.endpoint == 'how_it_works' %}active{% endif %}">How It Works</a></li>
-                <li><a href="{{ url_for('what_we_buy') }}" class="{% if request.endpoint == 'what_we_buy' %}active{% endif %}">What We Buy</a></li>
-                <li><a href="{{ url_for('about') }}" class="{% if request.endpoint == 'about' %}active{% endif %}">About</a></li>
-                <li><a href="{{ url_for('faq') }}" class="{% if request.endpoint == 'faq' %}active{% endif %}">FAQ</a></li>
-                <li><a href="{{ url_for('contact') }}" class="{% if request.endpoint == 'contact' %}active{% endif %}">Contact</a></li>
+                <li><a href="{{ url_for('how_it_works') }}" class="nav-link {% if request.endpoint == 'how_it_works' %}active{% endif %}">How It Works<span class="nav-link-underline"></span></a></li>
+                <li><a href="{{ url_for('what_we_buy') }}" class="nav-link {% if request.endpoint == 'what_we_buy' %}active{% endif %}">What We Buy<span class="nav-link-underline"></span></a></li>
+                <li><a href="{{ url_for('about') }}" class="nav-link {% if request.endpoint == 'about' %}active{% endif %}">About<span class="nav-link-underline"></span></a></li>
+                <li><a href="{{ url_for('faq') }}" class="nav-link {% if request.endpoint == 'faq' %}active{% endif %}">FAQ<span class="nav-link-underline"></span></a></li>
+                <li><a href="{{ url_for('contact') }}" class="nav-link {% if request.endpoint == 'contact' %}active{% endif %}">Contact<span class="nav-link-underline"></span></a></li>
+                <li class="nav-mobile-cta">
+                    <a href="{{ url_for('quote') }}" class="nav-cta nav-cta-mobile">
+                        <i class="fas fa-bolt"></i> Get Instant Quote
+                    </a>
+                </li>
+                <li class="nav-mobile-contact">
+                    <a href="tel:08001234567" class="nav-contact-link">
+                        <i class="fas fa-phone"></i> 0800 123 4567
+                    </a>
+                </li>
             </ul>
 
-            <a href="{{ url_for('quote') }}" class="nav-cta">Get Instant Quote</a>
+            <a href="{{ url_for('quote') }}" class="nav-cta nav-cta-desktop">
+                <i class="fas fa-bolt"></i> Get Instant Quote
+            </a>
+            <a href="tel:08001234567" class="nav-phone" aria-label="Call us">
+                <i class="fas fa-phone"></i>
+            </a>
             <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle menu">
                 <i class="fas fa-bars"></i>
             </button>
@@ -122,11 +163,20 @@
         <div class="section-container">
             <div class="footer-grid">
                 <div class="footer-brand">
-                    <a href="{{ url_for('index') }}" class="logo">
-                        <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="webuyanyvehicle UK" width="48" height="48">
-                        <span>webuyanyvehicle</span>
+                    <a href="{{ url_for('index') }}" class="logo" aria-label="webuyanyvehicle UK — Home">
+                        {{ comp.logo_mark(size='lg', variant='light') }}
                     </a>
                     <p>We buy any vehicle in any condition. Instant valuation, instant payment, free collection across the United Kingdom. Licensed motor trader, fully insured.</p>
+                    <div class="footer-trust">
+                        <div class="footer-trust-item">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Licensed Trader</span>
+                        </div>
+                        <div class="footer-trust-item">
+                            <i class="fas fa-star"></i>
+                            <span>4.9 / 5 TrustScore</span>
+                        </div>
+                    </div>
                     <div class="footer-social">
                         <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
                         <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
@@ -181,8 +231,29 @@
         </div>
     </footer>
 
+    {# ──────────────────────────────────────────────
+       MOBILE STICKY BOTTOM CTA
+       Only shown on consumer (non-admin) pages on mobile
+       ─────────────────────────────────────────────── #}
+    {% if not request.endpoint or not request.endpoint.startswith('admin_') %}
+    <div class="mobile-bottom-cta" id="mobileBottomCta">
+        <a href="{{ url_for('quote') }}" class="mobile-bottom-cta-button">
+            <span class="mobile-bottom-cta-icon"><i class="fas fa-bolt"></i></span>
+            <span class="mobile-bottom-cta-text">
+                <strong>Get Your Free Valuation</strong>
+                <small>Instant quote in 60 seconds</small>
+            </span>
+            <span class="mobile-bottom-cta-chev"><i class="fas fa-chevron-right"></i></span>
+        </a>
+    </div>
+    {% endif %}
+
     <!-- Back to Top -->
     <button class="back-to-top" id="backToTop" aria-label="Back to top">
+        <svg class="back-to-top-progress" viewBox="0 0 52 52" aria-hidden="true">
+            <circle class="btp-track" cx="26" cy="26" r="24"/>
+            <circle class="btp-arc"   cx="26" cy="26" r="24" id="backToTopArc"/>
+        </svg>
         <i class="fas fa-chevron-up"></i>
     </button>
 

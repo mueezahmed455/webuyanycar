@@ -3,11 +3,12 @@
 {% block body_class %}admin-body{% endblock %}
 
 {% block content %}
+{% import '_components.html' as comp %}
 <div class="admin-dashboard">
-    <aside class="admin-sidebar">
-        <a href="{{ url_for('admin_dashboard') }}" class="logo" style="justify-content: center;">
-            <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="" width="32" height="32">
-            <span style="font-size: 1.1rem;">Admin</span>
+    <aside class="admin-sidebar" id="adminSidebar">
+        <a href="{{ url_for('admin_dashboard') }}" class="logo admin-sidebar-logo" aria-label="webuyanyvehicle Admin">
+            {{ comp.logo_icon(size='sm', variant='default') }}
+            <span class="admin-sidebar-label">Admin</span>
         </a>
         <ul class="admin-nav">
             <li><a href="{{ url_for('admin_dashboard') }}"><i class="fas fa-chart-pie"></i> Dashboard</a></li>
@@ -20,34 +21,36 @@
     <main class="admin-main">
         <div class="admin-header">
             <h1>Quote {{ quote.quote_ref }}</h1>
-            <a href="{{ url_for('admin_quotes') }}" class="btn btn-dark" style="padding: 10px 20px; font-size: 0.9rem;">
-                <i class="fas fa-arrow-left"></i> Back to Quotes
-            </a>
+            <div class="admin-header-actions">
+                <a href="{{ url_for('admin_quotes') }}" class="btn btn-dark admin-back-btn">
+                    <i class="fas fa-arrow-left"></i><span>Back to Quotes</span>
+                </a>
+            </div>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px;">
+        <div class="admin-detail-grid">
             <div class="card">
                 <h4 style="margin-bottom: 16px;">Customer Details</h4>
-                <table style="width: 100%; border-collapse: collapse;">
-                    <tr><td style="padding: 6px 0; color: var(--slate-light); font-size: 0.85rem;">Name</td><td style="padding: 6px 0; font-weight: 700;">{{ quote.name }}</td></tr>
-                    <tr><td style="padding: 6px 0; color: var(--slate-light); font-size: 0.85rem;">Phone</td><td style="padding: 6px 0;">{{ quote.phone }}</td></tr>
-                    <tr><td style="padding: 6px 0; color: var(--slate-light); font-size: 0.85rem;">Email</td><td style="padding: 6px 0;">{{ quote.email }}</td></tr>
-                    <tr><td style="padding: 6px 0; color: var(--slate-light); font-size: 0.85rem;">Address</td><td style="padding: 6px 0;">{{ quote.address or 'N/A' }}</td></tr>
-                    <tr><td style="padding: 6px 0; color: var(--slate-light); font-size: 0.85rem;">Postcode</td><td style="padding: 6px 0;">{{ quote.postcode or 'N/A' }}</td></tr>
+                <table class="admin-detail-table">
+                    <tr><td>Name</td><td><strong>{{ quote.name }}</strong></td></tr>
+                    <tr><td>Phone</td><td>{{ quote.phone }}</td></tr>
+                    <tr><td>Email</td><td>{{ quote.email }}</td></tr>
+                    <tr><td>Address</td><td>{{ quote.address or 'N/A' }}</td></tr>
+                    <tr><td>Postcode</td><td>{{ quote.postcode or 'N/A' }}</td></tr>
                 </table>
             </div>
 
             <div class="card">
                 <h4 style="margin-bottom: 16px;">Vehicle Details</h4>
-                <table style="width: 100%; border-collapse: collapse;">
-                    <tr><td style="padding: 6px 0; color: var(--slate-light); font-size: 0.85rem;">Make</td><td style="padding: 6px 0; font-weight: 700;">{{ quote.make }}</td></tr>
-                    <tr><td style="padding: 6px 0; color: var(--slate-light); font-size: 0.85rem;">Model</td><td style="padding: 6px 0;">{{ quote.model }}</td></tr>
-                    <tr><td style="padding: 6px 0; color: var(--slate-light); font-size: 0.85rem;">Year</td><td style="padding: 6px 0;">{{ quote.year }}</td></tr>
-                    <tr><td style="padding: 6px 0; color: var(--slate-light); font-size: 0.85rem;">Mileage</td><td style="padding: 6px 0;">{{ quote.mileage }}</td></tr>
-                    <tr><td style="padding: 6px 0; color: var(--slate-light); font-size: 0.85rem;">Reg</td><td style="padding: 6px 0;">{{ quote.reg_number or 'N/A' }}</td></tr>
-                    <tr><td style="padding: 6px 0; color: var(--slate-light); font-size: 0.85rem;">Fuel</td><td style="padding: 6px 0;">{{ quote.fuel_type }}</td></tr>
-                    <tr><td style="padding: 6px 0; color: var(--slate-light); font-size: 0.85rem;">Condition</td><td style="padding: 6px 0;">{{ quote.condition }}</td></tr>
-                    <tr><td style="padding: 6px 0; color: var(--slate-light); font-size: 0.85rem;">MOT</td><td style="padding: 6px 0;">{{ quote.mot_status }}</td></tr>
+                <table class="admin-detail-table">
+                    <tr><td>Make</td><td><strong>{{ quote.make }}</strong></td></tr>
+                    <tr><td>Model</td><td>{{ quote.model }}</td></tr>
+                    <tr><td>Year</td><td>{{ quote.year }}</td></tr>
+                    <tr><td>Mileage</td><td>{{ quote.mileage }}</td></tr>
+                    <tr><td>Reg</td><td>{{ quote.reg_number or 'N/A' }}</td></tr>
+                    <tr><td>Fuel</td><td>{{ quote.fuel_type }}</td></tr>
+                    <tr><td>Condition</td><td>{{ quote.condition }}</td></tr>
+                    <tr><td>MOT</td><td>{{ quote.mot_status }}</td></tr>
                 </table>
             </div>
         </div>
@@ -55,10 +58,10 @@
         {% if photos %}
         <div class="card" style="margin-bottom: 24px;">
             <h4 style="margin-bottom: 16px;">Vehicle Photos</h4>
-            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px;">
+            <div class="admin-photo-grid">
                 {% for photo_url in photos %}
                 <a href="{{ photo_url }}" target="_blank" rel="noopener">
-                    <img src="{{ photo_url }}" alt="Vehicle photo" style="width: 100%; height: 160px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border);">
+                    <img src="{{ photo_url }}" alt="Vehicle photo" loading="lazy">
                 </a>
                 {% endfor %}
             </div>
@@ -74,7 +77,7 @@
 
         <div class="card">
             <h4 style="margin-bottom: 16px;">Update Status</h4>
-            <form action="{{ url_for('admin_quote_update', quote_id=quote.id) }}" method="POST" style="display: flex; gap: 16px; align-items: flex-end;">
+            <form action="{{ url_for('admin_quote_update', quote_id=quote.id) }}" method="POST" class="admin-status-form">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                 <div class="form-group" style="flex: 1; margin-bottom: 0;">
                     <label>Status</label>
@@ -90,7 +93,7 @@
                     <label>Valuation (£)</label>
                     <input type="number" name="valuation_amount" step="0.01" value="{{ quote.valuation_amount }}">
                 </div>
-                <button type="submit" class="btn btn-primary" style="height: 48px;">
+                <button type="submit" class="btn btn-primary admin-status-submit">
                     <i class="fas fa-save"></i> Update
                 </button>
             </form>

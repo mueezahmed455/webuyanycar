@@ -2277,3 +2277,905 @@ img[loading="lazy"].loaded {
         grid-template-columns: repeat(2, 1fr) !important;
     }
 }
+
+/* ============================================
+   LOGO MARK (inline SVG)
+   Inline SVG logo that scales crisply, themes by variant,
+   needle + car wheels animate on hover. Driven by `.logo-mark`
+   wrapper (rendered from templates/_components.html).
+   ============================================ */
+
+.logo-mark {
+    display: inline-flex;
+    align-items: center;
+    height: 44px;
+    line-height: 0;
+    position: relative;
+}
+
+.logo-mark .logo-svg {
+    display: block;
+    height: 100%;
+    width: auto;
+    max-width: 100%;
+    overflow: visible;
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.logo-mark--xs { height: 28px; }
+.logo-mark--sm { height: 34px; }
+.logo-mark--md { height: 42px; }
+.logo-mark--lg { height: 52px; }
+.logo-mark--xl { height: 64px; }
+
+.logo-mark--light .lm-text-primary { fill: #faf9f7; }
+.logo-mark--light .lm-text-accent  { fill: url(#lg-gold-h-lg-light); }
+.logo-mark--light .lm-pill-bg     { fill: url(#lg-gold-h-lg-light); }
+.logo-mark--light .lm-pill-text   { fill: #0a1628; }
+.logo-mark--light .lm-tagline     { fill: rgba(250, 249, 247, 0.55); }
+.logo-mark--light .lm-car-body    { fill: #faf9f7; }
+.logo-mark--light .lm-needle-pivot{ fill: #faf9f7; }
+.logo-mark--light .lm-wheel       { fill: #faf9f7; }
+
+.logo-mark--muted .lm-text-primary { fill: rgba(10, 22, 40, 0.55); }
+.logo-mark--muted .lm-tagline      { fill: rgba(74, 85, 104, 0.7); }
+
+/* Needle sweep on hover — pivots from (-22deg) to (+18deg).
+   The needle is wrapped in a `<g transform="translate(28 28)">` pivot
+   group inside the SVG, so its own (0,0) IS the dial centre in viewBox
+   space. We use `transform-box: fill-box` + `transform-origin: 50% 100%`
+   because the needle path runs from local y=-16 (tip) to y=0 (pivot),
+   and the bottom-centre of the bounding box maps to the (0,0) pivot.
+   Without `fill-box`, SVG defaults to `view-box` and the origin would
+   be misinterpreted as the top-left of the whole SVG. */
+.logo-mark .lm-needle,
+.logo-icon .lm-needle {
+    transform: rotate(-22deg);
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+    transition: transform 0.9s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.logo-mark:hover .lm-needle,
+.logo-mark:focus-visible .lm-needle,
+.logo:hover .lm-needle,
+.logo:focus-visible .lm-needle {
+    transform: rotate(18deg);
+    will-change: transform;
+}
+.logo-mark:hover .lm-needle,
+.logo-icon:hover .lm-needle,
+.logo-mark:focus-visible .lm-needle,
+.logo-icon:focus-visible .lm-needle,
+.logo:hover .lm-needle,
+.logo:focus-visible .lm-needle {
+    transform: rotate(18deg);
+}
+
+/* Car wheels — gentle bobbing motion continuously while visible (subtle) */
+.logo-mark .lm-wheel,
+.logo-icon .lm-wheel {
+    transform-origin: center;
+    transform-box: fill-box;
+    animation: wheel-bob 6s ease-in-out infinite;
+}
+.logo-mark .lm-wheel:nth-child(odd),
+.logo-icon .lm-wheel:nth-child(odd)  { animation-delay: -3s; }
+
+@keyframes wheel-bob {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-0.4px); }
+}
+.logo-mark:hover .lm-wheel,
+.logo-icon:hover .lm-wheel {
+    animation-duration: 1.6s;
+}
+
+/* Logo hover — slight lift + gold halo */
+.logo .logo-mark { transition: transform 0.3s ease; }
+.logo:hover .logo-mark {
+    transform: translateY(-1px);
+}
+.logo:hover .logo-mark .logo-svg {
+    filter: drop-shadow(0 2px 6px rgba(201, 162, 39, 0.18));
+}
+
+/* Tagline visibility — hide below the 'md' size for cleaner navbar */
+.logo-mark--xs .lm-tagline,
+.logo-mark--sm .lm-tagline,
+.logo-mark--md .lm-tagline { display: none; }
+.logo-mark--lg .lm-tagline,
+.logo-mark--xl .lm-tagline { display: block; }
+
+/* Icon-only variant (for admin sidebar) */
+.logo-icon {
+    display: inline-flex;
+    align-items: center;
+    line-height: 0;
+}
+.logo-icon > svg {
+    display: block;
+    height: 100%;
+    width: auto;
+}
+.logo-icon--xs { height: 24px; }
+.logo-icon--sm { height: 36px; }
+.logo-icon--md { height: 56px; }
+.logo-icon--lg { height: 72px; }
+
+/* Light variant — for admin sidebar on dark backgrounds */
+.logo-icon--light .lm-text-primary,
+.logo-icon--light .lm-pill-text,
+.logo-icon--light .lm-car-body,
+.logo-icon--light .lm-needle-pivot,
+.logo-icon--light .lm-wheel {
+    fill: #faf9f7;
+}
+
+/* ============================================
+   PROMO / ANNOUNCEMENT BAR
+   Sits above the navbar. Dismissible per session.
+   ============================================ */
+
+.promo-bar {
+    position: relative;
+    background: linear-gradient(90deg, var(--navy) 0%, var(--navy-light) 50%, var(--navy) 100%);
+    color: var(--white);
+    border-bottom: 1px solid rgba(201, 162, 39, 0.3);
+    font-size: 0.9rem;
+    z-index: 1100;
+    overflow: hidden;
+}
+.promo-bar::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 30% 50%, rgba(201, 162, 39, 0.18) 0%, transparent 60%);
+    pointer-events: none;
+    animation: promo-shimmer 8s ease-in-out infinite;
+}
+@keyframes promo-shimmer {
+    0%, 100% { transform: translateX(0); opacity: 1; }
+    50%      { transform: translateX(8%); opacity: 0.85; }
+}
+.promo-bar-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 9px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    position: relative;
+}
+.promo-bar-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: var(--gold);
+    color: var(--navy);
+    border-radius: 50%;
+    font-size: 0.75rem;
+    flex-shrink: 0;
+    animation: badge-pulse 2s infinite;
+}
+.promo-bar-text {
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    text-align: center;
+    flex: 1;
+    min-width: 0;
+}
+.promo-bar-text strong {
+    color: var(--gold-light);
+    font-weight: 800;
+    margin-right: 2px;
+}
+.promo-bar-text a {
+    color: var(--gold);
+    font-weight: 700;
+    margin-left: 4px;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: color 0.2s ease;
+}
+.promo-bar-text a:hover {
+    color: var(--gold-light);
+}
+.promo-bar-close {
+    background: transparent;
+    border: none;
+    color: rgba(250, 249, 247, 0.7);
+    cursor: pointer;
+    padding: 6px 8px;
+    border-radius: 6px;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+    font-size: 0.85rem;
+}
+.promo-bar-close:hover {
+    color: var(--gold);
+    background: rgba(250, 249, 247, 0.08);
+}
+.promo-bar.is-dismissed {
+    max-height: 0;
+    padding: 0;
+    overflow: hidden;
+    border-bottom: none;
+    transition: max-height 0.4s ease, padding 0.4s ease;
+}
+
+/* ============================================
+   NAVIGATION — refined link + actions
+   Desktop: animated underline on nav links.
+   Mobile : extras (CTA + phone) inside drawer.
+   ============================================ */
+
+.logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--navy);
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Desktop: nav-link gets animated underline + bolder hit-area */
+.nav-link {
+    position: relative;
+    display: inline-block;
+}
+.nav-link .nav-link-underline {
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    bottom: 4px;
+    height: 2px;
+    background: var(--gold);
+    border-radius: 2px;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.nav-link:hover .nav-link-underline,
+.nav-link.active .nav-link-underline {
+    transform: scaleX(1);
+}
+
+/* Phone icon button (desktop) — discreet, hidden on admin */
+.nav-phone {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: rgba(10, 22, 40, 0.06);
+    color: var(--navy);
+    margin-left: 8px;
+    transition: all 0.25s ease;
+    font-size: 0.95rem;
+}
+.nav-phone:hover {
+    background: var(--navy);
+    color: var(--gold);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(10, 22, 40, 0.18);
+}
+
+/* Admin header toggle button (in nav) */
+.admin-toggle {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    background: var(--gold);
+    color: var(--navy);
+    border: none;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+    font-size: 0.9rem;
+}
+.admin-toggle:hover {
+    background: var(--gold-light);
+    transform: translateY(-2px);
+}
+
+/* Drawer-only nav-row variants */
+.nav-mobile-cta,
+.nav-mobile-contact {
+    display: none;
+}
+.nav-contact-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--slate);
+    font-weight: 700;
+    padding: 14px 20px;
+    width: 100%;
+    border-radius: 10px;
+    background: rgba(10, 22, 40, 0.04);
+}
+
+/* ============================================
+   MOBILE STICKY BOTTOM CTA BAR
+   Shows after scrolling past hero on mobile.
+   Designed to mirror the conversion pattern of
+   leading car-buy services.
+   ============================================ */
+
+.mobile-bottom-cta {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 900;
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+    background: rgba(250, 249, 247, 0.92);
+    backdrop-filter: blur(18px) saturate(180%);
+    -webkit-backdrop-filter: blur(18px) saturate(180%);
+    border-top: 1px solid var(--border);
+    box-shadow: 0 -10px 30px rgba(10, 22, 40, 0.12);
+    transform: translateY(110%);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+    display: none;
+}
+.mobile-bottom-cta.is-visible {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+}
+.mobile-bottom-cta-button {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+    color: var(--navy);
+    border-radius: 14px;
+    padding: 14px 18px;
+    text-decoration: none;
+    box-shadow: 0 6px 20px rgba(201, 162, 39, 0.45);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+.mobile-bottom-cta-button:hover,
+.mobile-bottom-cta-button:active {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 28px rgba(201, 162, 39, 0.55);
+}
+.mobile-bottom-cta-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--navy);
+    color: var(--gold);
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+    flex-shrink: 0;
+}
+.mobile-bottom-cta-text {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+.mobile-bottom-cta-text strong {
+    font-weight: 800;
+    font-size: 0.95rem;
+    letter-spacing: -0.01em;
+}
+.mobile-bottom-cta-text small {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: rgba(10, 22, 40, 0.65);
+    margin-top: 1px;
+}
+.mobile-bottom-cta-chev {
+    color: var(--navy);
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
+/* ============================================
+   BACK TO TOP — with circular progress arc
+   ============================================ */
+
+.back-to-top .back-to-top-progress {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    transform: rotate(-90deg);
+}
+.back-to-top .btp-track {
+    fill: none;
+    stroke: rgba(201, 162, 39, 0.18);
+    stroke-width: 3;
+}
+.back-to-top .btp-arc {
+    fill: none;
+    stroke: var(--gold);
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-dasharray: 150.8;
+    stroke-dashoffset: 150.8;
+    transition: stroke-dashoffset 0.15s linear;
+}
+
+/* ============================================
+   FOOTER — trust badges row
+   ============================================ */
+
+.footer-trust {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-bottom: 18px;
+}
+.footer-trust-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(250, 249, 247, 0.06);
+    border: 1px solid rgba(250, 249, 247, 0.08);
+    padding: 7px 12px;
+    border-radius: 100px;
+    font-size: 0.82rem;
+    color: rgba(250, 249, 247, 0.85);
+    font-weight: 600;
+    transition: all 0.25s ease;
+}
+.footer-trust-item:hover {
+    background: rgba(201, 162, 39, 0.12);
+    border-color: rgba(201, 162, 39, 0.3);
+    color: var(--gold-light);
+    transform: translateY(-2px);
+}
+.footer-trust-item i {
+    color: var(--gold);
+    font-size: 0.85rem;
+}
+
+/* ============================================
+   ADMIN — header actions + sidebar label
+   ============================================ */
+
+.admin-sidebar-label {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: var(--white);
+    letter-spacing: -0.01em;
+}
+.admin-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.admin-logout-btn,
+.admin-back-btn {
+    padding: 10px 18px;
+    font-size: 0.88rem;
+    gap: 8px;
+}
+.admin-filter-btn {
+    padding: 9px 16px !important;
+    font-size: 0.82rem !important;
+    border-radius: 8px !important;
+}
+.admin-filter-btn:hover {
+    background: var(--gold) !important;
+    color: var(--navy) !important;
+}
+.admin-view-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--gold-dark);
+    font-weight: 700;
+    padding: 6px 10px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+.admin-view-link:hover {
+    background: rgba(201, 162, 39, 0.1);
+    transform: translateX(2px);
+}
+.admin-view-link::after {
+    content: '\f061';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    font-size: 0.7rem;
+    opacity: 0;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.admin-view-link:hover::after {
+    opacity: 1;
+}
+
+.admin-detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 32px;
+}
+.admin-detail-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.admin-detail-table td {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.95rem;
+    color: var(--navy);
+}
+.admin-detail-table tr:last-child td { border-bottom: none; }
+.admin-detail-table td:first-child {
+    color: var(--slate-light);
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 700;
+    width: 38%;
+}
+.admin-photo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
+}
+.admin-photo-grid img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.admin-photo-grid a:hover img {
+    transform: scale(1.03);
+    box-shadow: var(--shadow-lg);
+}
+.admin-status-form {
+    display: flex;
+    gap: 16px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+}
+.admin-status-submit {
+    height: 50px;
+    padding: 0 24px;
+}
+
+/* ============================================
+   INPUT RIPPLE / TOUCH FEEDBACK
+   Subtle press effect on clickable elements
+   ============================================ */
+
+.btn:active,
+.nav-cta:active,
+.mobile-bottom-cta-button:active,
+.trust-item:active,
+.card:active,
+.feature-card:active,
+.testimonial-card:active,
+.step-card:active,
+.file-upload-zone:active {
+    transform: scale(0.98);
+}
+
+/* ============================================
+   MOBILE-SPECIFIC ENHANCEMENTS
+   ============================================ */
+
+@media (max-width: 1024px) {
+    /* Make admin sidebar overlaid like a drawer on tablet too */
+    .admin-sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 2000;
+        box-shadow: var(--shadow-2xl);
+    }
+    .admin-sidebar.open {
+        transform: translateX(0);
+    }
+    .admin-main {
+        margin-left: 0;
+    }
+    /* Show admin toggle in navbar on tablet */
+    .admin-toggle {
+        display: inline-flex;
+    }
+
+    /* Footer columns collapse to 2-col earlier */
+    .footer-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    .admin-detail-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    /* Promo bar — slightly condensed */
+    .promo-bar-inner {
+        padding: 8px 14px;
+        gap: 10px;
+    }
+    .promo-bar-text {
+        font-size: 0.82rem;
+    }
+
+    /* Navbar height a touch taller for touch targets */
+    :root {
+        --nav-height: 68px;
+    }
+    .nav-container {
+        height: var(--nav-height);
+        padding: 0 16px;
+    }
+    .logo-mark--md { height: 36px; }
+
+    /* Hide desktop phone + CTA on mobile, expose drawer items */
+    .nav-phone,
+    .nav-cta-desktop {
+        display: none;
+    }
+    .nav-mobile-cta,
+    .nav-mobile-contact {
+        display: block;
+    }
+    .nav-mobile-cta {
+        margin-top: 16px;
+    }
+    .nav-mobile-contact {
+        margin-top: 8px;
+    }
+    .nav-mobile-cta .nav-cta-mobile {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        padding: 16px 22px !important;
+        font-size: 1rem !important;
+        background: var(--gold) !important;
+        color: var(--navy) !important;
+        border-radius: 12px !important;
+        box-shadow: 0 6px 20px rgba(201, 162, 39, 0.35);
+    }
+
+    /* Show mobile bottom CTA bar */
+    .mobile-bottom-cta {
+        display: block;
+    }
+    /* Push main content above sticky CTA on mobile so last paragraphs aren't hidden.
+       Toggled on/off by JS so we don't leave a gap on short pages where the CTA
+       never shows up. */
+    body.has-mbcta {
+        padding-bottom: 84px;
+    }
+    body.has-mbcta.admin-body {
+        /* Keep admin main content reachable above the CTA bar */
+        padding-bottom: 84px;
+    }
+
+    /* Sliding dot indicator under active drawer link */
+    .nav-links li {
+        position: relative;
+    }
+    .nav-links a.active::before {
+        content: '';
+        position: absolute;
+        left: 6px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 4px;
+        height: 22px;
+        background: var(--gold);
+        border-radius: 2px;
+    }
+
+    /* Admin sidebar gets box-shadow drawer style */
+    .admin-sidebar { padding: 20px; }
+    .admin-sidebar .logo {
+        flex-direction: row;
+        justify-content: flex-start !important;
+        gap: 14px;
+    }
+    .admin-sidebar .logo .logo-icon { height: 38px; }
+    .admin-sidebar-label { font-size: 1.15rem; }
+    .admin-main { padding: 20px; }
+
+    /* Footer single-column on mobile, trust badges stack */
+    .footer-grid {
+        grid-template-columns: 1fr;
+    }
+    .footer-trust {
+        flex-direction: row;
+        gap: 8px;
+    }
+    .footer-trust-item {
+        font-size: 0.75rem;
+        padding: 6px 10px;
+    }
+
+    /* Buttons & tap targets — slightly larger */
+    .btn {
+        padding: 15px 26px;
+        border-radius: 12px;
+        font-size: 0.95rem;
+    }
+    .file-upload-zone {
+        padding: 24px 16px;
+    }
+
+    /* Hero stats — compact 3-up with smaller font on mobile */
+    .hero-stats { gap: 24px; }
+
+    /* Section spacing */
+    .section { padding: 56px 0; }
+    .cta-banner { padding: 64px 0; }
+
+    /* Drop shadow on promo bar slightly stronger on mobile */
+    .promo-bar { font-size: 0.8rem; }
+}
+
+@media (max-width: 480px) {
+    .hero-content h1 { font-size: 2.1rem; }
+    .hero-stats {
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+    .stat-item .stat-number { font-size: 1.6rem; }
+    .stat-item .stat-label { font-size: 0.75rem; }
+    .promo-bar-text { font-size: 0.78rem; }
+    .footer-trust { gap: 6px; }
+    .footer-trust-item { font-size: 0.7rem; padding: 5px 9px; }
+    .admin-photo-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .admin-photo-grid img { height: 120px; }
+}
+
+/* Hide admin toggle on desktop */
+@media (min-width: 1025px) {
+    .admin-toggle { display: none; }
+    /* Desktop: kill the existing background hover; underline is the indicator */
+    .nav-link:hover,
+    .nav-link:focus-visible {
+        background: transparent;
+        color: var(--navy);
+    }
+    .nav-link.active {
+        background: transparent;
+        color: var(--navy);
+    }
+}
+
+/* ============================================
+   PERFORMANCE / SAFETY NETS
+   1) Respect prefers-reduced-motion (a11y + battery)
+   2) Disable expensive infinite animations on mobile / touch
+      devices to prevent compositor/GPU overload.
+   3) Reduce backdrop-filter blur radius (very expensive on iOS)
+   4) Remove body noise texture on mobile (compositor hot spot)
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    /* Show all reveals immediately */
+    .reveal,
+    .reveal-left,
+    .reveal-right,
+    .reveal-scale {
+        opacity: 1 !important;
+        transform: none !important;
+    }
+    /* Kill needle/wheel rolling on logo */
+    .lm-needle,
+    .lm-wheel,
+    .lm-car {
+        animation: none !important;
+        transition: none !important;
+        transform: none !important;
+    }
+}
+
+/* Mobile / touch devices: kill ongoing infinite animations and lighten
+   backdrop-filters. Uses media query (max-width) OR (hover: none) so that
+   hybrids in tablet/landscape mode get the same treatment. */
+@media (max-width: 768px), (hover: none) {
+    /* 4 wheels bobbing continuously = quad the GPU work. Disable. */
+    .logo-mark .lm-wheel,
+    .logo-icon .lm-wheel {
+        animation: none !important;
+    }
+    /* Logo drop-shadow on hover is a filter — kills paint perf on weak GPUs. */
+    .logo:hover .logo-mark .logo-svg {
+        filter: none !important;
+    }
+    /* Hero CTA pulse-glow animates box-shadow every 2s — repaint heavy. */
+    .btn-primary.pulse {
+        animation: none !important;
+    }
+    /* Promo icon badge-pulse — repaint heavy. */
+    .promo-bar-icon {
+        animation: none !important;
+    }
+    /* Promo bar radial shimmer — prevents unnecessary compositing. */
+    .promo-bar::before {
+        animation: none !important;
+    }
+    /* Hero ::after floating blob — animates scale + translate forever. */
+    .hero::after {
+        animation: none !important;
+    }
+    /* Backdrop-filter is the #1 mobile perf killer on iOS. Halve the radius
+       on every element that uses it. */
+    .navbar {
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
+    .mobile-bottom-cta {
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
+    .mobile-backdrop {
+        backdrop-filter: blur(2px);
+        -webkit-backdrop-filter: blur(2px);
+    }
+    /* body::before covers the entire viewport with an SVG noise filter.
+       Repaints every time anything in the viewport changes. Kill it on
+       mobile to free up the compositor. `content: none` is safer than
+       `display: none` on iOS Safari which can otherwise leave a stale
+       compositor layer. */
+    body::before {
+        content: none;
+    }
+    /* The on-scroll reveal offsets (translateY 24px) are larger paint
+       over an already pressure-strained compositor. Reduce. */
+    .reveal { transform: translateY(16px); }
+    .reveal-left { transform: translateX(-16px); }
+    .reveal-right { transform: translateX(16px); }
+    .reveal-scale { transform: scale(0.96); }
+}
+
+/* Ultra-tight devices (480px and below): also lighten scroll progress bar */
+@media (max-width: 480px) {
+    .scroll-progress { height: 2px; }
+    .scroll-progress { background: var(--gold); }
+}
+
+/* Very low-memory / reduced data devices: disable ALL wheel bob + parallax
+   and shrink backdrop blur further. Opt-in via prefers-reduced-data where
+   supported (Chrome/Edge/Android only — Safari is a graceful no-op). */
+@media (prefers-reduced-data: reduce) {
+    .lm-wheel,
+    .hero::after,
+    .promo-bar::before,
+    .btn-primary.pulse,
+    .promo-bar-icon {
+        animation: none !important;
+    }
+    .navbar,
+    .mobile-bottom-cta,
+    .mobile-backdrop {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+    body::before { display: none; }
+}
