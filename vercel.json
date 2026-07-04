@@ -1,37 +1,33 @@
 {
-  "version": 2,
-  "builds": [
+  "functions": {
+    "api/index.py": {
+      "memory": 512,
+      "maxDuration": 30
+    }
+  },
+  "headers": [
     {
-      "src": "api/index.py",
-      "use": "@vercel/python",
-      "config": {
-        "memory": 512,
-        "maxDuration": 30
-      }
+      "source": "/static/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
     }
   ],
-  "routes": [
+  "rewrites": [
     {
-      "src": "/static/(.*)",
-      "dest": "/static/$1",
-      "continue": true,
-      "headers": {
-        "Cache-Control": "public, max-age=31536000, immutable"
-      }
+      "source": "/api/send-email",
+      "destination": "/api/index"
     },
     {
-      "src": "/api/send-email",
-      "dest": "/api/index.py",
-      "methods": ["POST"]
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/api/index.py"
+      "source": "/(.*)",
+      "destination": "/api/index"
     }
   ],
   "env": {
-    "FLASK_ENV": "production",
-    "PYTHONPATH": "."
+    "FLASK_ENV": "production"
   },
   "regions": ["lhr1"]
 }
